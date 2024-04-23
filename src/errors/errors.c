@@ -6,13 +6,30 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:45:52 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/19 14:40:19 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/23 10:55:28 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-void	ft_error(char *message)
+int	print_error(char *error, char *var, int return_val)
 {
-	printf("WE IN DEEP SHIT: %s\n", message);
+	if (error)
+	{
+		while (*error)
+			write(2, error++, 1);
+		if (var)
+		{
+			while (*var)
+				write(2, var++, 1);
+		}
+		write(2, "\n", 1);
+	}
+	return (return_val);
+}
+
+int	set_exit_code(t_base *base, int exit_code, int return_val)
+{
+	base->exit_code = exit_code;
+	return (return_val);
 }

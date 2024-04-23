@@ -1,28 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   color.c                                            :+:      :+:    :+:   */
+/*   cleaning.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/19 15:08:59 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/19 15:09:35 by sbelomet         ###   ########.fr       */
+/*   Created: 2024/04/22 10:07:41 by lgosselk          #+#    #+#             */
+/*   Updated: 2024/04/22 15:05:47 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-int	ft_get_color(double a, double r, double g, double b)
+void	on_destroy(t_base *base)
 {
-	int	ia;
-	int	ir;
-	int	ig;
-	int	ib;
+	if (base->win_ptr)
+		mlx_destroy_window(base->mlx_ptr, base->win_ptr);
+	if (base->mlx_ptr)
+		mlx_destroy(base->mlx_ptr);
+	exit(base->exit_code);
+}
 
-	ia = (int)a;
-	ir = (int)(255.99 * r);
-	ig = (int)(255.99 * g);
-	ib = (int)(255.99 * b);
-
-	return (ia << 24 | ir << 16 | ig << 8 | ib);
+int	close_window(t_base *base)
+{
+	on_destroy(base);
+	return (0);
 }

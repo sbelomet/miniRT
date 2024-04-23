@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:08:51 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/19 15:24:13 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/23 12:59:19 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,30 +16,36 @@ void	ft_pixel_put(t_base *base, int x, int y, int color)
 {
 	int	pos;
 
-	pos = (x * base->bitsperpix / 8) + (y * base->size_line);
+	pos = (x * base->image.bitsperpix / 8) + (y * base->image.size_line);
 	if (x >= 0 && y >= 0 && x < WIN_WIDTH && y < WIN_HEIGHT)
-		*(int *) &base->img_data[pos] = color;
+		*(int *) &base->image.img_data[pos] = color;
 }
 
-void	ft_draw_base_texture(t_base *base)
+void	ft_render(t_base *base)
 {
-	int	i;
-	int	j;
-	int	c;
+	int			index[3];
+	t_color		c;
+	t_ray		r;
 
-	c = 0;
-	i = 0;
-	while (i < WIN_WIDTH)
+	index[1] = -1;
+	while (++index[1] < WIN_HEIGHT)
 	{
-		j = 0;
-		while (j < WIN_HEIGHT)
+		index[0] = -1;
+		printf("Scanlines remaining: %d\n", WIN_HEIGHT - index[1]);
+		while (++index[0] < WIN_WIDTH)
 		{
-			c = ft_get_color(0, ((double)i / (WIN_WIDTH)),
-					((double)j / (WIN_HEIGHT)), 0);
-			ft_pixel_put(base, i, j, c);
-			j++;
+			c = ft_color_new(0, 0, 0, 0);
+			index[2] = -1;
+			while (++index[2] < SAMPLE_PPIXEL)
+			{
+				r = ft_ray_calculate(base, index[0], index[1]);
+				c = ft_color_add(c,
+						ft_ray_color(base, r, MAX_DEPTH, base->first_hittable));
+			}
+			ft_pixel_put(base, index[0], index[1], ft_get_color_int(
+					ft_color_mult(c, PIX_SAMPLE_SCALE)));
 		}
-		i++;
+		mlx_put_image_to_window(base->mlx_ptr, base->win_ptr,
+			base->image.img_ptr, 0, 0);
 	}
-	mlx_put_image_to_window(base->mlx_ptr, base->win_ptr, base->img_ptr, 0, 0);
 }

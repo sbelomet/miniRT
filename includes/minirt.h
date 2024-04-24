@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/23 14:51:12 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/24 15:14:23 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,8 @@
 /* Defines */
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
-# define VIEWPORT_HEIGHT 2.0
-# define VIEWPORT_WIDTH 3.555555555
 # define SAMPLE_PPIXEL 100
+/* 100 0.01 40 0.025 */
 # define PIX_SAMPLE_SCALE 0.01
 # define MAX_DEPTH 10
 
@@ -58,6 +57,13 @@ enum e_types
 	SPHERE,
 	PLANE,
 	CYLINDER,
+};
+
+enum e_materials
+{
+	LAMBERTIAN,
+	METAL,
+	DIELECTRIC,
 };
 
 /* Basic units structures */
@@ -89,6 +95,25 @@ typedef struct s_inter
 	double	max;
 }			t_inter;
 
+typedef struct s_hit_rec
+{
+	t_vector3			p;
+	t_vector3			normal;
+	struct s_material	*mat;
+	double				t;
+	int					front_face;
+	struct s_base		*base;
+}						t_hit_rec;
+
+typedef struct s_material
+{
+	int		material;
+	t_color	albedo;
+	double	fuzz;
+	double	ref_index;
+	int		(*ft_scatter)(const t_ray, const t_hit_rec, t_color *, t_ray *);
+}				t_material;
+
 /* Objects structures */
 
 typedef struct s_alight
@@ -99,9 +124,14 @@ typedef struct s_alight
 
 typedef struct s_camera
 {
-	t_vector3	origin;
+	double		focal_length;
+	double		viewport_width;
+	double		viewport_height;
+	t_vector3	lookfrom;
+	t_vector3	lookat;
+	t_vector3	vup;
 	t_vector3	ori;
-	int			fov;
+	double		vfov;
 	t_vector3	pixel00_loc;
 	t_vector3	pixel_delta_u;
 	t_vector3	pixel_delta_v;
@@ -120,6 +150,7 @@ typedef struct s_sphere
 	double		diam;
 	double		radius;
 	t_color		color;
+	t_material	*mat;
 }				t_sphere;
 
 typedef struct s_plane
@@ -139,13 +170,6 @@ typedef struct s_cylin
 }				t_cylin;
 
 /* Other structures */
-
-typedef struct s_hit_rec
-{
-	t_vector3	p;
-	t_vector3	normal;
-	double		t;
-}				t_hit_rec;
 
 typedef struct s_hittable
 {
@@ -193,6 +217,7 @@ int			close_window(t_base *base);
 /* Init */
 void		set_base(t_base *base);
 int			ft_base_init(t_base *base);
+t_camera	ft_camera_init(double vfov);
 
 /* Errors */
 int			print_error(char *error, char *var, int return_val);
@@ -218,6 +243,8 @@ void		ft_pixel_put(t_base *base, int x, int y, int color);
 /* Math Utils */
 double		ft_rand_double_range(t_base *base, double min, double max);
 double		ft_rand_double(t_base *base);
+double		ft_deg_to_rad(double deg);
+double		ft_rad_to_deg(double rad);
 
 /* Hittable Utils */
 int			ft_hit_anything(t_hittable *list, const t_ray r,
@@ -226,7 +253,9 @@ int			ft_hit_anything(t_hittable *list, const t_ray r,
 /* Vector3 Utils */
 t_vector3	ft_vec3_new(const double x, const double y, const double z);
 void		ft_vec3_print(const t_vector3 v, const char *name);
-t_vector3	ft_set_face_normal(const t_ray r, const t_vector3 outward_normal);
+t_vector3	ft_set_face_normal(const t_ray r, const t_vector3 outward_normal,
+				t_hit_rec *rec);
+int			ft_vec3_near_zero(const t_vector3 v);
 t_vector3	ft_vec3_add(t_vector3 v1, const t_vector3 v2);
 t_vector3	ft_vec3_sub(t_vector3 v1, const t_vector3 v2);
 t_vector3	ft_vec3_mult(t_vector3 v, const float value);
@@ -255,5 +284,17 @@ t_inter		ft_inter_new(const double min, const double max);
 int			ft_inter_contains(const t_inter inter, const double x);
 int			ft_inter_surrounds(const t_inter inter, const double x);
 double		ft_inter_clamp(const t_inter inter, const double x);
+
+/* Material Utils */
+t_material	*ft_mat_new(int type, t_color albedo, int (*ft_scatter)
+				(const t_ray, const t_hit_rec, t_color *, t_ray *));
+
+/* Scatter Functions */
+int			ft_lamb_scatter(const t_ray r_in, const t_hit_rec rec,
+				t_color *attenuation, t_ray *scattered);
+int			ft_metal_scatter(const t_ray r_in, const t_hit_rec rec,
+				t_color *attenuation, t_ray *scattered);
+int	ft_dielectric_scatter(const t_ray r_in, const t_hit_rec rec,
+				t_color *attenuation, t_ray *scattered);
 
 #endif

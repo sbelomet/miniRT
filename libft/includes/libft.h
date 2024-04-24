@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 14:41:38 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/03/14 15:10:39 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/04/24 09:55:53 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@ typedef struct s_alloc
 {
 	void			*ptr;
 	struct s_alloc	*next;
-} 				t_alloc;
+}				t_alloc;
 
 char	*ft_itoa(int n);
+double	ft_abs(double n);
 int		ft_tolower(int c);
 int		ft_toupper(int c);
 int		ft_isalnum(int c);
@@ -53,7 +54,7 @@ void	*ft_memchr(const void *s, int c, size_t n);
 char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_strtrim(const char *s1, const char *set);
 int		malloc_add(t_alloc **lst, t_alloc *new_node);
-int	    ft_equal_strs(const char *s1, const char *s2);
+int		ft_equal_strs(const char *s1, const char *s2);
 void	*ft_memcpy(void *dest, const void *src, size_t n);
 void	*ft_memmove(void *dest, const void *src, size_t n);
 int		ft_memcmp(const void *s1, const void *s2, size_t n);

@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:18:00 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/23 10:18:14 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/24 13:42:43 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,8 @@ int	ft_hit_sphere(const t_sphere *sphere, const t_ray r,
 	rec->t = root;
 	rec->p = ft_ray_at(r, rec->t);
 	rec->normal = ft_set_face_normal(r, ft_vec3_div(ft_vec3_sub(rec->p,
-					sphere->center), sphere->radius));
+					sphere->center), sphere->radius), rec);
+	rec->mat = sphere->mat;
 	return (true);
 }
 
@@ -62,6 +63,7 @@ int	ft_hit_anything(t_hittable *list, const t_ray r,
 			rec->normal = temp_rec.normal;
 			rec->p = temp_rec.p;
 			rec->t = temp_rec.t;
+			rec->mat = temp_rec.mat;
 		}
 		temp_hittable = temp_hittable->next;
 	}

@@ -6,7 +6,7 @@
 #    By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/14 10:06:00 by lgosselk          #+#    #+#              #
-#    Updated: 2024/04/23 12:07:03 by sbelomet         ###   ########.fr        #
+#    Updated: 2024/04/24 14:35:19 by sbelomet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,22 +38,24 @@ RAY_UTILS_DIR	=	ray_utils/
 MATH_UTILS_DIR	=	math_utils/
 COLOR_UTILS_DIR	=	color_utils/
 VEC3_UTILS_DIR	=	vector3_utils/
-INTRV_UTILS_DIR	=	intervals_utils/
 HITBL_UTILS_DIR	=	hittable_utils/
+MATER_UTILS_DIR	=	material_utils/
+INTRV_UTILS_DIR	=	intervals_utils/
 
 # Files
 F_ERRORS		=	errors
 F_UTILS			=	cleaning
 F_LL_UTILS		=	ll_utils
-F_INIT			=	base_init
+F_INIT			=	base_init camera_init
 F_PARSING		=	file_parse
 F_COLOR			=	color color_ops1
 F_DRAW			=	draw
-F_MATH_UTILS	=	rng
+F_MATH_UTILS	=	rng angles
 F_VEC3_UTILS	=	vector3 vector3_ops1 vector3_ops2 vector3_rand
 F_RAY_UTILS		=	ray
-F_INTRV_UTILS	=	intervals
 F_HITBL_UTILS	=	hittable
+F_MATER_UITLS	=	scatter_funcs material
+F_INTRV_UTILS	=	intervals
 
 #$(addprefix $(PARSING_DIR), $(F_PARSING)) 
 FILES		=	$(addprefix $(INIT_DIR), $(F_INIT)) \
@@ -67,6 +69,7 @@ FILES		=	$(addprefix $(INIT_DIR), $(F_INIT)) \
 				$(addprefix $(VEC3_UTILS_DIR), $(F_VEC3_UTILS)) \
 				$(addprefix $(INTRV_UTILS_DIR), $(F_INTRV_UTILS)) \
 				$(addprefix $(HITBL_UTILS_DIR), $(F_HITBL_UTILS)) \
+				$(addprefix $(MATER_UTILS_DIR), $(F_MATER_UITLS)) \
 
 SRCS		=	src/main.c \
 				$(addprefix $(SRCS_DIR), $(addsuffix .c, $(FILES))) \
@@ -98,6 +101,7 @@ $(OBJS_DIR):
 	@mkdir -p $(OBJS_DIR)$(RAY_UTILS_DIR)
 	@mkdir -p $(OBJS_DIR)$(INTRV_UTILS_DIR)
 	@mkdir -p $(OBJS_DIR)$(HITBL_UTILS_DIR)
+	@mkdir -p $(OBJS_DIR)$(MATER_UTILS_DIR)
 
 clean :
 	@make clean -C ./libft

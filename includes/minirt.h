@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/24 15:14:23 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/25 12:39:16 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,10 @@
 /* Defines */
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
-# define SAMPLE_PPIXEL 100
-/* 100 0.01 40 0.025 */
-# define PIX_SAMPLE_SCALE 0.01
+# define VIEWPORT_HEIGHT 2.0
+# define VIEWPORT_WIDTH 3.555555555
+# define SAMPLE_PPIXEL 40
+# define PIX_SAMPLE_SCALE 0.025
 # define MAX_DEPTH 10
 
 # define TITLE "BetterBlender"
@@ -45,6 +46,8 @@
 # define ISS_ERR "whitespace that is not a space detected"
 # define OBJNAME_ERR "Invalid object name while parsing file"
 # define REGEX_ERR "File contains some not allowed characters"
+# define RANGE_ERR "Some number while parsing file is out of range"
+# define CREATE_ERR "An error occurred when trying to create an object"
 # define TWICE_ERR "Twice single object detected, only one A, C, L object"
 
 /* Enum */
@@ -177,12 +180,20 @@ typedef struct s_hittable
 	struct s_hittable	*next;
 }						t_hittable;
 
-typedef struct s_token
+typedef struct s_objects
 {
-	int				id;
-	void			*object;
-	struct s_token	*next;
-}					t_token;
+	int					id;
+	int					type;
+	void				*object;
+	struct s_objects	*next;
+}					t_objects;
+
+typedef struct s_uniques
+{
+	t_light		*light;
+	t_camera	*camera;
+	t_alight	*alight;
+}				t_uniques;
 
 typedef struct s_image
 {
@@ -204,7 +215,8 @@ typedef struct s_base
 	int				exit_code;
 	t_camera		camera;
 	unsigned long	seed;
-	t_token			*first_token;
+	t_uniques		uniques;
+	t_objects		*first_object;
 	t_hittable		*first_hittable;
 }					t_base;
 
@@ -220,6 +232,7 @@ int			ft_base_init(t_base *base);
 t_camera	ft_camera_init(double vfov);
 
 /* Errors */
+void		*print_error_null(char *error, char *var);
 int			print_error(char *error, char *var, int return_val);
 int			set_exit_code(t_base *base, int exit_code, int return_val);
 
@@ -232,8 +245,8 @@ t_color		ft_color_new(const double a, const double r,
 int			ft_get_color_int(t_color color);
 t_color		ft_color_add(t_color c1, const t_color c2);
 t_color		ft_color_sub(t_color c1, const t_color c2);
-t_color		ft_color_mult(t_color c, const float value);
-t_color		ft_color_div(t_color c, const float value);
+t_color		ft_color_mult(t_color c, const double value);
+t_color		ft_color_div(t_color c, const double value);
 t_color		ft_color_mult_color(t_color c1, const t_color c2);
 
 /* Draw */
@@ -249,6 +262,11 @@ double		ft_rad_to_deg(double rad);
 /* Hittable Utils */
 int			ft_hit_anything(t_hittable *list, const t_ray r,
 				const t_inter ray_t, t_hit_rec *rec);
+
+/* Linked List Utils */
+t_hittable	*ft_hittable_new(void *object);
+t_hittable	*ft_hittable_last(t_hittable *hittable);
+void		ft_hittable_add(t_hittable **hittable, t_hittable *new);
 
 /* Vector3 Utils */
 t_vector3	ft_vec3_new(const double x, const double y, const double z);

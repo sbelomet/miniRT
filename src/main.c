@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:10:13 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/24 15:44:23 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:25:54 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	check_args(int argc, char **argv)
 
 t_hittable	*ft_hittables_init(t_base *base)
 {
-	/* t_hittable	*h1;
+/* 	t_hittable	*h1;
 	t_hittable	*h2;
 	t_hittable	*h3;
 	t_hittable	*h4;
@@ -67,72 +67,65 @@ t_hittable	*ft_hittables_init(t_base *base)
 	s4->radius = .5;
 	s4->mat = ft_mat_new(METAL, ft_color_new(0, .8, .6, .2),
 			ft_metal_scatter);
-	s4->mat->fuzz = .5; */
-
-	for (int i = 0; i < 20; i++)
-	{
-		for (int j = 0; j < 20; j++)
-		{
-		}
-	}
+	s4->mat->fuzz = .5;
+ */
 	
-	
-	t_hittable	*h1 = (t_hittable *)malloc(sizeof(t_hittable));
-	t_hittable	*h2 = (t_hittable *)malloc(sizeof(t_hittable));
-	t_hittable	*h3 = (t_hittable *)malloc(sizeof(t_hittable));
-	t_hittable	*h4 = (t_hittable *)malloc(sizeof(t_hittable));
-	t_hittable	*h5 = (t_hittable *)malloc(sizeof(t_hittable));
-	t_hittable	*h6 = (t_hittable *)malloc(sizeof(t_hittable));
-	t_sphere	*s1 = (t_sphere *)malloc(sizeof(t_sphere));
-	t_sphere	*s2 = (t_sphere *)malloc(sizeof(t_sphere));
-	t_sphere	*s3 = (t_sphere *)malloc(sizeof(t_sphere));
-	t_sphere	*s4 = (t_sphere *)malloc(sizeof(t_sphere));
-	t_sphere	*s5 = (t_sphere *)malloc(sizeof(t_sphere));
-	t_sphere	*s6 = (t_sphere *)malloc(sizeof(t_sphere));
+	t_hittable	*h_head;
+	t_sphere	*s;
 
-	h1->object = s1;
-	h1->next = h2;
-	h2->object = s2;
-	h2->next = h3;
-	h3->object = s3;
-	h3->next = h4;
-	h4->object = s4;
-	h4->next = h5;
-	h5->object = s5;
-	h5->next = h6;
-	h6->object = s6;
-	h6->next = NULL;
-	s1->center = ft_vec3_new(0, -1000, 0);
-	s1->radius = 1000;
-	s1->mat = ft_mat_new(LAMBERTIAN, ft_color_new(0, .5, .5, .5), ft_lamb_scatter);
-
+	h_head = NULL;
+	s = (t_sphere *)malloc(sizeof(t_sphere));
+	s->center = ft_vec3_new(0, -1000, 0);
+	s->radius = 1000;
+	s->mat = ft_mat_new(LAMBERTIAN, ft_color_new(0, .5, .5, .5), ft_lamb_scatter);
+	ft_hittable_add(&h_head, ft_hittable_new(s));
 	for (int i = -11; i < 11; i++)
 	{
-		for (size_t j = -11; i < 11; j++)
+		for (int j = -11; j < 11; j++)
 		{
 			double choose_mat = ft_rand_double(base);
 			t_vector3 center = ft_vec3_new(i + .9 * ft_rand_double(base), .2, j + .9 * ft_rand_double(base));
-
 			if (ft_vec3_len(ft_vec3_sub(center, ft_vec3_new(4, .2, 0))) > .9)
 			{
 				t_sphere *s = (t_sphere *)malloc(sizeof(t_sphere));
 				if (choose_mat < .8)
 				{
-					t_color albedo = ft_color_mult(ft_color_new(ft_rand_double(base) * ft_rand_double(base), ft_rand_double(base) * ft_rand_double(base), ft_rand_double(base) * ft_rand_double(base), 0), ft_color_new(ft_rand_double(base) * ft_rand_double(base), ft_rand_double(base) * ft_rand_double(base), ft_rand_double(base) * ft_rand_double(base), 0));
+					t_color albedo = ft_color_mult_color(ft_color_new(0, ft_rand_double(base), ft_rand_double(base), ft_rand_double(base)), ft_color_new(0, ft_rand_double(base), ft_rand_double(base), ft_rand_double(base)));
 					s->center = center;
 					s->radius = .2;
 					s->mat = ft_mat_new(LAMBERTIAN, albedo, ft_lamb_scatter);
 				}
 				else
 				{
+					t_color albedo = ft_color_new(0, ft_rand_double_range(base, .5, 1), ft_rand_double_range(base, .5, 1), ft_rand_double_range(base, .5, 1));
+					double fuzz = ft_rand_double_range(base, 0, .5);
 					s->center = center;
 					s->radius = .2;
-					s->mat = ft_mat_new(METAL, ft_color_new(.5 * (1 + ft_rand_double(base)), .5 * (1 + ft_rand_double(base)), .5 * (1 + ft_rand_double(base)), 0), ft_metal_scatter);
+					s->mat = ft_mat_new(METAL, albedo, ft_metal_scatter);
+					s->mat->fuzz = fuzz;
 				}
+				ft_hittable_add(&h_head, ft_hittable_new(s));
 			}
 		}
 	}
-	return (h1);
+	s = (t_sphere *)malloc(sizeof(t_sphere));
+	s->center = ft_vec3_new(-4, 1, 0);
+	s->radius = 1;
+	s->mat = ft_mat_new(METAL, ft_color_new(0, .3, .9, .6), ft_metal_scatter);
+	s->mat->fuzz = .2;
+	ft_hittable_add(&h_head, ft_hittable_new(s));
+	s = (t_sphere *)malloc(sizeof(t_sphere));
+	s->center = ft_vec3_new(0, 1, 0);
+	s->radius = 1;
+	s->mat = ft_mat_new(LAMBERTIAN, ft_color_new(0, .4, .2, .9), ft_lamb_scatter);
+	ft_hittable_add(&h_head, ft_hittable_new(s));
+	s = (t_sphere *)malloc(sizeof(t_sphere));
+	s->center = ft_vec3_new(4, 1, 0);
+	s->radius = 1;
+	s->mat = ft_mat_new(METAL, ft_color_new(0, 1, 1, .9), ft_metal_scatter);
+	s->mat->fuzz = 0;
+	ft_hittable_add(&h_head, ft_hittable_new(s));
+	return (h_head);
 }
 
 int	main(const int argc, char **argv)
@@ -147,7 +140,7 @@ int	main(const int argc, char **argv)
 	if (ft_base_init(&base) == 1)
 		on_destroy(&base);
 	base.camera = ft_camera_init(20);
-	base.first_hittable = ft_hittables_init(&base);
+    base.first_hittable = ft_hittables_init(&base);
 	ft_render(&base);
 	//mlx_hook(base.win_ptr, 2, (1L << 0), key_hook, &base);
 	mlx_hook(base.win_ptr, 17, (1L << 0), close_window, &base);

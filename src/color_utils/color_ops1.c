@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:21:36 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/23 10:21:41 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/25 11:55:29 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_color	ft_color_sub(t_color c1, const t_color c2)
 	return (c1);
 }
 
-t_color	ft_color_mult(t_color c, const float value)
+t_color	ft_color_mult(t_color c, const double value)
 {
 	c.alpha *= value;
 	c.red *= value;
@@ -39,7 +39,7 @@ t_color	ft_color_mult(t_color c, const float value)
 	return (c);
 }
 
-t_color	ft_color_div(t_color c, const float value)
+t_color	ft_color_div(t_color c, const double value)
 {
 	c.alpha /= value;
 	c.red /= value;

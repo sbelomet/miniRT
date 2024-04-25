@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 14:41:38 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/24 09:55:53 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/24 15:53:54 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,9 @@ char	*ft_read(int fd, char *remind);
 char	*ft_to_remind(char	*remind, char *buff);
 
 /* Garbage collextor versions */
+void	ft_malloc_clear(t_alloc **lst);
 char	*ft_strdup_allocated(const char *s1, t_alloc **alloc);
+char	**ft_split_alloc(const char *s, char c, t_alloc **alloc);
 char	*ft_strjoin_alloc(char const *s1, char const *s2, t_alloc **alloc);
 
 #endif

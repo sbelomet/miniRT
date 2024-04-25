@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 14:12:53 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/24 15:12:46 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/25 15:24:55 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ t_camera	ft_camera_init2(double vfov)
 	double		h;
 
 	cam.vfov = vfov;
-	cam.lookfrom = ft_vec3_new(-2, 2, 1);
-	cam.lookat = ft_vec3_new(0, 0, -1);
+	cam.lookfrom = ft_vec3_new(13, 2, 3);
+	cam.lookat = ft_vec3_new(0, 0, 0);
 	cam.vup = ft_vec3_new(0, 1, 0);
 	cam.focal_length = ft_vec3_len(ft_vec3_sub(cam.lookfrom, cam.lookat));
 	theta = ft_deg_to_rad(cam.vfov);

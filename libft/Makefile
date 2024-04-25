@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+         #
+#    By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/10/25 16:27:07 by lgosselk          #+#    #+#              #
-#    Updated: 2024/04/24 09:56:13 by sbelomet         ###   ########.fr        #
+#    Updated: 2024/04/24 15:53:47 by lgosselk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,7 +33,7 @@ F_ALLOC		=	ft_calloc ft_malloc
 F_MEM		=	ft_memset ft_memchr ft_memcmp ft_memcpy ft_memmove
 F_PUT		=	ft_putchar_fd ft_putendl_fd ft_putnbr_fd ft_putstr_fd
 F_IS		=	ft_isalpha ft_isascii ft_isdigit ft_isprint ft_isalnum
-F_UTILS		= 	ft_abs ft_atoi ft_bzero ft_itoa ft_split ft_tolower ft_toupper
+F_UTILS		= 	ft_abs ft_atoi ft_bzero ft_itoa ft_split ft_tolower ft_toupper ft_split_alloc
 F_STR		=	ft_strchr ft_strdup ft_striteri ft_strjoin ft_strlcat ft_strlcpy \
 				ft_strlen ft_strmapi ft_strncmp ft_strnstr ft_strrchr ft_strtrim ft_substr \
 				ft_equal_strs

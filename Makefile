@@ -6,7 +6,7 @@
 #    By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/14 10:06:00 by lgosselk          #+#    #+#              #
-#    Updated: 2024/04/24 14:35:19 by sbelomet         ###   ########.fr        #
+#    Updated: 2024/04/25 13:24:13 by sbelomet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,7 @@ INTRV_UTILS_DIR	=	intervals_utils/
 # Files
 F_ERRORS		=	errors
 F_UTILS			=	cleaning
-F_LL_UTILS		=	ll_utils
+F_LL_UTILS		=	ll_utils hittables_utils
 F_INIT			=	base_init camera_init
 F_PARSING		=	file_parse
 F_COLOR			=	color color_ops1
@@ -57,11 +57,11 @@ F_HITBL_UTILS	=	hittable
 F_MATER_UITLS	=	scatter_funcs material
 F_INTRV_UTILS	=	intervals
 
-#$(addprefix $(PARSING_DIR), $(F_PARSING)) 
 FILES		=	$(addprefix $(INIT_DIR), $(F_INIT)) \
 				$(addprefix $(DRAW_DIR), $(F_DRAW)) \
 				$(addprefix $(UTILS_DIR), $(F_UTILS)) \
 				$(addprefix $(ERRORS_DIR), $(F_ERRORS)) \
+				$(addprefix $(PARSING_DIR), $(F_PARSING)) \
 				$(addprefix $(COLOR_UTILS_DIR), $(F_COLOR)) \
 				$(addprefix $(LL_UTILS_DIR), $(F_LL_UTILS)) \
 				$(addprefix $(RAY_UTILS_DIR), $(F_RAY_UTILS)) \
@@ -111,7 +111,7 @@ clean :
 
 fclean : clean
 	@make fclean -C ./libft
-	@make fclean -C ./minilibx
+	@make clean -C ./minilibx
 	@$(RM) $(NAME)
 	@echo "$(RED)$(NAME) removed!$(DEFAULT)"
 

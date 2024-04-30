@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:18:00 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/24 13:42:43 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/30 11:11:01 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int	ft_hit_sphere(const t_sphere *sphere, const t_ray r,
 	double		disc;
 	double		root;
 
+	//printf("we in hit sphere\n");
 	oc = ft_vec3_sub(sphere->center, r.origin);
 	quad.x = ft_vec3_len_squared(r.dir);
 	quad.y = ft_vec3_dot(r.dir, oc);
@@ -42,14 +43,15 @@ int	ft_hit_sphere(const t_sphere *sphere, const t_ray r,
 	return (true);
 }
 
-int	ft_hit_anything(t_hittable *list, const t_ray r,
+int	ft_hit_anything(t_objects *list, const t_ray r,
 	const t_inter ray_t, t_hit_rec *rec)
 {
 	t_hit_rec	temp_rec;
-	t_hittable	*temp_hittable;
+	t_objects	*temp_hittable;
 	int			hit_anything;
 	double		closest_so_far;
 
+	//printf("we in hit anything\n");
 	temp_hittable = list;
 	hit_anything = false;
 	closest_so_far = ray_t.max;

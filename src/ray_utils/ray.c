@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:13:10 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/24 15:02:13 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/30 11:55:08 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,16 @@ t_ray	ft_ray_calculate(t_base *base, int i, int j)
 	offset = ft_vec3_new(0, 0, 0);
 	offset = ft_vec3_new(ft_rand_double(base) - .5,
 			ft_rand_double(base) - .5, 0);
-	pixel_sample = ft_vec3_add(base->camera.pixel00_loc, ft_vec3_add(
-				ft_vec3_mult(base->camera.pixel_delta_u, i + offset.x),
-				ft_vec3_mult(base->camera.pixel_delta_v, j + offset.y)));
-	ray_origin = base->camera.lookfrom;
+	pixel_sample = ft_vec3_add(base->camera->pixel00_loc, ft_vec3_add(
+				ft_vec3_mult(base->camera->pixel_delta_u, i + offset.x),
+				ft_vec3_mult(base->camera->pixel_delta_v, j + offset.y)));
+	ray_origin = base->camera->lookfrom;
 	ray_direction = ft_vec3_sub(pixel_sample, ray_origin);
 	return (ft_ray_new(ray_origin, ray_direction));
 }
 
 t_color	ft_ray_scatter(const t_ray r, t_hit_rec rec,
-	int *depth, t_hittable *world)
+	int *depth, t_objects *world)
 {
 	t_ray	scattered;
 	t_color	attenuation;
@@ -60,20 +60,19 @@ t_color	ft_ray_scatter(const t_ray r, t_hit_rec rec,
 	return (ft_color_new(0, 0, 0, 0));
 }
 
-t_color	ft_ray_color(t_base *base, t_ray r, int depth, t_hittable *world)
+t_color	ft_ray_color(t_base *base, t_ray r, int depth, t_objects *world)
 {
 	t_hit_rec	rec;
 	t_vector3	unit_direction;
 	double		a;
 
+	//printf("we in ray_color, depth: %d\n", depth);
 	if (depth <= 0)
 		return (ft_color_new(0, 0, 0, 0));
 	rec.normal = ft_vec3_new(0, 0, 0);
 	rec.base = base;
 	if (ft_hit_anything(world, r, ft_inter_new(0.001, INFINITY), &rec))
-	{
 		return (ft_ray_scatter(r, rec, &depth, world));
-	}
 	unit_direction = ft_vec3_unit(r.dir);
 	a = .5 * (unit_direction.y + 1.0);
 	return (ft_color_add(ft_color_mult(ft_color_new(0, 1, 1, 1), 1.0 - a),

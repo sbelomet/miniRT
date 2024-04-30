@@ -6,7 +6,7 @@
 /*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/25 14:41:38 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/24 15:53:54 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/04/26 10:29:27 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ int		ft_isalpha(int c);
 int		ft_isascii(int c);
 int		ft_isdigit(int c);
 int		ft_isprint(int c);
+double	ft_atof(char *str);
 int		ft_atoi(const char *nptr);
 char	*ft_strdup(const char *s1);
 size_t	ft_strlen(const char *str);

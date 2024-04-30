@@ -6,7 +6,7 @@
 #    By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/14 10:06:00 by lgosselk          #+#    #+#              #
-#    Updated: 2024/04/25 13:24:13 by sbelomet         ###   ########.fr        #
+#    Updated: 2024/04/30 12:51:25 by sbelomet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,9 +33,9 @@ DRAW_DIR		=	draw/
 UTILS_DIR		=	utils/
 ERRORS_DIR		=	errors/
 PARSING_DIR		=	parsing/
-LL_UTILS_DIR	=	ll_utils/
 RAY_UTILS_DIR	=	ray_utils/
 MATH_UTILS_DIR	=	math_utils/
+AABB_UTILS_DIR	=	aabb_utils/
 COLOR_UTILS_DIR	=	color_utils/
 VEC3_UTILS_DIR	=	vector3_utils/
 HITBL_UTILS_DIR	=	hittable_utils/
@@ -44,18 +44,18 @@ INTRV_UTILS_DIR	=	intervals_utils/
 
 # Files
 F_ERRORS		=	errors
-F_UTILS			=	cleaning
-F_LL_UTILS		=	ll_utils hittables_utils
+F_UTILS			=	cleaning hittables_utils parsing_utils parsing_utils2
 F_INIT			=	base_init camera_init
-F_PARSING		=	file_parse
+F_PARSING		=	file_parse creating_objs creating_uniques
 F_COLOR			=	color color_ops1
 F_DRAW			=	draw
 F_MATH_UTILS	=	rng angles
+F_AABB_UTILS	=	aabb
 F_VEC3_UTILS	=	vector3 vector3_ops1 vector3_ops2 vector3_rand
 F_RAY_UTILS		=	ray
 F_HITBL_UTILS	=	hittable
-F_MATER_UITLS	=	scatter_funcs material
-F_INTRV_UTILS	=	intervals
+F_MATER_UITLS	=	scatter_funcs material mat_ray_mods
+F_INTRV_UTILS	=	intervals intervals_ops
 
 FILES		=	$(addprefix $(INIT_DIR), $(F_INIT)) \
 				$(addprefix $(DRAW_DIR), $(F_DRAW)) \
@@ -63,9 +63,9 @@ FILES		=	$(addprefix $(INIT_DIR), $(F_INIT)) \
 				$(addprefix $(ERRORS_DIR), $(F_ERRORS)) \
 				$(addprefix $(PARSING_DIR), $(F_PARSING)) \
 				$(addprefix $(COLOR_UTILS_DIR), $(F_COLOR)) \
-				$(addprefix $(LL_UTILS_DIR), $(F_LL_UTILS)) \
 				$(addprefix $(RAY_UTILS_DIR), $(F_RAY_UTILS)) \
 				$(addprefix $(MATH_UTILS_DIR), $(F_MATH_UTILS)) \
+				$(addprefix $(AABB_UTILS_DIR), $(F_AABB_UTILS)) \
 				$(addprefix $(VEC3_UTILS_DIR), $(F_VEC3_UTILS)) \
 				$(addprefix $(INTRV_UTILS_DIR), $(F_INTRV_UTILS)) \
 				$(addprefix $(HITBL_UTILS_DIR), $(F_HITBL_UTILS)) \
@@ -93,10 +93,10 @@ $(OBJS_DIR):
 	@mkdir -p $(OBJS_DIR)$(INIT_DIR)
 	@mkdir -p $(OBJS_DIR)$(ERRORS_DIR)
 	@mkdir -p $(OBJS_DIR)$(PARSING_DIR)
-	@mkdir -p $(OBJS_DIR)$(LL_UTILS_DIR)
 	@mkdir -p $(OBJS_DIR)$(COLOR_UTILS_DIR)
 	@mkdir -p $(OBJS_DIR)$(DRAW_DIR)
 	@mkdir -p $(OBJS_DIR)$(MATH_UTILS_DIR)
+	@mkdir -p $(OBJS_DIR)$(AABB_UTILS_DIR)
 	@mkdir -p $(OBJS_DIR)$(VEC3_UTILS_DIR)
 	@mkdir -p $(OBJS_DIR)$(RAY_UTILS_DIR)
 	@mkdir -p $(OBJS_DIR)$(INTRV_UTILS_DIR)

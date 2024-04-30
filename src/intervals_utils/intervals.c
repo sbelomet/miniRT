@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:17:51 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/23 10:17:52 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/30 10:10:32 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,25 +21,17 @@ t_inter	ft_inter_new(const double min, const double max)
 	return (inter);
 }
 
-int	ft_inter_contains(const t_inter inter, const double x)
+t_inter	ft_inter_new2(const t_inter a, const t_inter b)
 {
-	if (inter.min <= x && x <= inter.max)
-		return (true);
-	return (false);
-}
+	t_inter	inter;
 
-int	ft_inter_surrounds(const t_inter inter, const double x)
-{
-	if (inter.min < x && x < inter.max)
-		return (true);
-	return (false);
-}
-
-double	ft_inter_clamp(const t_inter inter, const double x)
-{
-	if (x < inter.min)
-		return (inter.min);
-	if (x > inter.max)
-		return (inter.max);
-	return (x);
+	if (a.min <= b.min)
+		inter.min = a.min;
+	else
+		inter.min = b.min;
+	if (a.max >= b.max)
+		inter.max = a.max;
+	else
+		inter.max = b.max;
+	return (inter);
 }

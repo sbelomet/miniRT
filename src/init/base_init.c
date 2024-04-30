@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:47:15 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/25 15:54:51 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/30 11:03:06 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ void	set_base(t_base *base)
 	base->first_object = NULL;
 	base->image.img_ptr = NULL;
 	base->image.img_data = NULL;
-	base->uniques.light = NULL;
-	base->uniques.camera = NULL;
-	base->uniques.alight = NULL;
+	base->light = NULL;
+	base->camera = NULL;
+	base->alight = NULL;
 	base->seed = (unsigned long)&base;
 }
 

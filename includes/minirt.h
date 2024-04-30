@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/25 12:39:16 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/30 12:52:57 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@
 /* Defines */
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
-# define VIEWPORT_HEIGHT 2.0
-# define VIEWPORT_WIDTH 3.555555555
 # define SAMPLE_PPIXEL 40
 # define PIX_SAMPLE_SCALE 0.025
 # define MAX_DEPTH 10
@@ -43,9 +41,11 @@
 # define IMG_ERR "Image initialisation failure"
 # define FILE_ERR "Cannot open file with path: "
 # define WIN_ERR "Window initialisation failure"
+
 # define ISS_ERR "whitespace that is not a space detected"
 # define OBJNAME_ERR "Invalid object name while parsing file"
 # define REGEX_ERR "File contains some not allowed characters"
+# define ARGS_ERR "Bad number of arguments while parsing an object"
 # define RANGE_ERR "Some number while parsing file is out of range"
 # define CREATE_ERR "An error occurred when trying to create an object"
 # define TWICE_ERR "Twice single object detected, only one A, C, L object"
@@ -116,6 +116,13 @@ typedef struct s_material
 	double	ref_index;
 	int		(*ft_scatter)(const t_ray, const t_hit_rec, t_color *, t_ray *);
 }				t_material;
+
+typedef struct s_aabb
+{
+	t_inter	x;
+	t_inter	y;
+	t_inter	z;
+}			t_aabb;
 
 /* Objects structures */
 
@@ -213,36 +220,75 @@ typedef struct s_base
 	void			*mlx_ptr;
 	void			*win_ptr;
 	int				exit_code;
-	t_camera		camera;
+	t_camera		*camera;
+	t_alight		*alight;
+	t_light			*light;
 	unsigned long	seed;
-	t_uniques		uniques;
 	t_objects		*first_object;
 	t_hittable		*first_hittable;
 }					t_base;
 
 /* FUNCTIONS */
 
+/***   UTILS   ***/
+
+/* Parsing utils */
+t_color		parse_color(char *arg);
+t_vector3	parse_vector(char *arg);
+bool		out_range_color(t_color color);
+bool		out_range_norm(t_vector3 vector);
+bool		out_range(double min, double max, double value);
+
+/* Parsing utils 2 */
+bool		line_regex(char *line);
+int			extract_type(char *arg);
+bool 		only_numbers(char *arg);
+bool		right_args(char **args, int type);
+t_objects	*get_last_object(t_objects *list);
+
 /* Cleaning */
 void		on_destroy(t_base *base);
 int			close_window(t_base *base);
 
+/* Hittable utils */
+t_hittable	*ft_hittable_new(void *object);
+t_hittable	*ft_hittable_last(t_hittable *hittable);
+void		ft_hittable_add(t_hittable **hittable, t_hittable *new);
+
+/* ---------------- */
+
 /* Init */
 void		set_base(t_base *base);
 int			ft_base_init(t_base *base);
-t_camera	ft_camera_init(double vfov);
+void		ft_camera_init(t_base *base);
 
 /* Errors */
 void		*print_error_null(char *error, char *var);
 int			print_error(char *error, char *var, int return_val);
 int			set_exit_code(t_base *base, int exit_code, int return_val);
 
-/* Parsing */
+/***   PARSING  ***/
+
+/* Parsing file */
 int			file_parse(t_base *base, char *filepath);
+
+/* Creating objects */
+t_plane		*create_plane(char **args);
+t_sphere	*create_sphere(char **args);
+t_cylin		*create_cylinder(char **args);
+
+/* Creating uniques */
+t_light		*create_light(char **args);
+t_camera	*create_camera(char **args);
+t_alight	*create_amblight(char **args);
+
+/* ---------------- */
 
 /* Color */
 t_color		ft_color_new(const double a, const double r,
 				const double g, const double b);
 int			ft_get_color_int(t_color color);
+t_color		ft_color_byte_to_per(const t_color color);
 t_color		ft_color_add(t_color c1, const t_color c2);
 t_color		ft_color_sub(t_color c1, const t_color c2);
 t_color		ft_color_mult(t_color c, const double value);
@@ -260,13 +306,8 @@ double		ft_deg_to_rad(double deg);
 double		ft_rad_to_deg(double rad);
 
 /* Hittable Utils */
-int			ft_hit_anything(t_hittable *list, const t_ray r,
+int			ft_hit_anything(t_objects *list, const t_ray r,
 				const t_inter ray_t, t_hit_rec *rec);
-
-/* Linked List Utils */
-t_hittable	*ft_hittable_new(void *object);
-t_hittable	*ft_hittable_last(t_hittable *hittable);
-void		ft_hittable_add(t_hittable **hittable, t_hittable *new);
 
 /* Vector3 Utils */
 t_vector3	ft_vec3_new(const double x, const double y, const double z);
@@ -295,24 +336,36 @@ t_vector3	ft_vec3_rand_hemis(t_base *base, const t_vector3 normal);
 t_ray		ft_ray_new(const t_vector3 origin, const t_vector3 dir);
 t_vector3	ft_ray_at(const t_ray ray, const double t);
 t_ray		ft_ray_calculate(t_base *base, int i, int j);
-t_color		ft_ray_color(t_base *base, t_ray r, int depth, t_hittable *world);
+t_color		ft_ray_color(t_base *base, t_ray r, int depth, t_objects *world);
 
 /* Intervals Utils */
 t_inter		ft_inter_new(const double min, const double max);
+t_inter		ft_inter_new2(const t_inter a, const t_inter b);
 int			ft_inter_contains(const t_inter inter, const double x);
 int			ft_inter_surrounds(const t_inter inter, const double x);
 double		ft_inter_clamp(const t_inter inter, const double x);
+t_inter		ft_inter_expand(const t_inter inter, const double delta);
 
 /* Material Utils */
 t_material	*ft_mat_new(int type, t_color albedo, int (*ft_scatter)
 				(const t_ray, const t_hit_rec, t_color *, t_ray *));
+t_vector3	ft_reflect(const t_vector3 v, const t_vector3 n);
+t_vector3	ft_refract(const t_vector3 uv,
+				const t_vector3 n, double etai_over_etat);
+t_color		ft_emmited(double u, double v, const t_vector3 p);
 
 /* Scatter Functions */
 int			ft_lamb_scatter(const t_ray r_in, const t_hit_rec rec,
 				t_color *attenuation, t_ray *scattered);
 int			ft_metal_scatter(const t_ray r_in, const t_hit_rec rec,
 				t_color *attenuation, t_ray *scattered);
-int	ft_dielectric_scatter(const t_ray r_in, const t_hit_rec rec,
+int			ft_dielectric_scatter(const t_ray r_in, const t_hit_rec rec,
 				t_color *attenuation, t_ray *scattered);
+
+/* Axis-Aligned Bounding Boxes Utils */
+t_aabb		ft_aabb_new(const t_inter x, const t_inter y, const t_inter z);
+t_aabb		ft_aabb_new2(const t_vector3 a, const t_vector3 b);
+t_aabb		ft_aabb_new3(const t_aabb box0, const t_aabb box1);
+int			ft_aabb_hit(const t_aabb aabb, const t_ray r, t_inter ray_t);
 
 #endif

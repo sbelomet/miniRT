@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:21:25 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/23 14:51:36 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/04/30 11:28:07 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,4 +45,15 @@ int	ft_get_color_int(t_color color)
 	cints[2] = (int)(256 * ft_inter_clamp(intensity, color.green));
 	cints[3] = (int)(256 * ft_inter_clamp(intensity, color.blue));
 	return (cints[0] << 24 | cints[1] << 16 | cints[2] << 8 | cints[3]);
+}
+
+t_color	ft_color_byte_to_per(const t_color color)
+{
+	t_color	new_c;
+
+	new_c.alpha = color.alpha / 256;
+	new_c.red = color.red / 256;
+	new_c.green = color.green / 256;
+	new_c.blue = color.blue / 256;
+	return (new_c);
 }

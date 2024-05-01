@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:13:10 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/30 11:55:08 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/01 10:28:52 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,34 +49,36 @@ t_color	ft_ray_scatter(const t_ray r, t_hit_rec rec,
 {
 	t_ray	scattered;
 	t_color	attenuation;
+	t_color	col_from_scatter;
 	t_base	*base;
 
 	base = rec.base;
-	if (rec.mat->ft_scatter(r, rec, &attenuation, &scattered))
-	{
-		return (ft_color_mult_color(attenuation,
-				ft_ray_color(base, scattered, *(depth) - 1, world)));
-	}
-	return (ft_color_new(0, 0, 0, 0));
+	if (!rec.mat->ft_scatter(r, rec, &attenuation, &scattered))
+		return (rec.emmited);
+	col_from_scatter = ft_color_mult_color(attenuation,
+			ft_ray_color(base, scattered, *(depth) - 1, world));
+	return (ft_color_add(rec.emmited, col_from_scatter));
 }
 
 t_color	ft_ray_color(t_base *base, t_ray r, int depth, t_objects *world)
 {
 	t_hit_rec	rec;
-	t_vector3	unit_direction;
-	double		a;
+	t_ray		scattered;
+	t_color		attenuation;
+	t_color		col_from_scatter;
 
-	//printf("we in ray_color, depth: %d\n", depth);
 	if (depth <= 0)
 		return (ft_color_new(0, 0, 0, 0));
 	rec.normal = ft_vec3_new(0, 0, 0);
 	rec.base = base;
-	if (ft_hit_anything(world, r, ft_inter_new(0.001, INFINITY), &rec))
-		return (ft_ray_scatter(r, rec, &depth, world));
-	unit_direction = ft_vec3_unit(r.dir);
-	a = .5 * (unit_direction.y + 1.0);
-	return (ft_color_add(ft_color_mult(ft_color_new(0, 1, 1, 1), 1.0 - a),
-			ft_color_mult(ft_color_new(0, .5, .7, 1), a)));
+	if (!ft_hit_anything(world, r, ft_inter_new(0.001, INFINITY), &rec))
+		return (base->alight->color);
+	//return (ft_ray_scatter(r, rec, &depth, world));
+	if (!rec.mat->ft_scatter(r, rec, &attenuation, &scattered))
+		return (rec.emmited);
+	col_from_scatter = ft_color_mult_color(attenuation,
+			ft_ray_color(base, scattered, depth - 1, world));
+	return (ft_color_add(rec.emmited, col_from_scatter));
 }
 
 /* 
@@ -86,3 +88,8 @@ t_color	ft_ray_color(t_base *base, t_ray r, int depth, t_objects *world)
 				ft_vec3_rand_hemis(base, rec.normal));
 		return (ft_color_mult(ft_ray_color(base,
 					ft_ray_new(rec.p, direction), depth - 1, world), .5)); */
+/* 		
+	unit_direction = ft_vec3_unit(r.dir);
+	a = .5 * (unit_direction.y + 1.0);
+	return (ft_color_add(ft_color_mult(ft_color_new(0, 1, 1, 1), 1.0 - a),
+			ft_color_mult(ft_color_new(0, .5, .7, 1), a))); */

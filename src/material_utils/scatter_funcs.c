@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 10:08:49 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/30 12:51:08 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/01 10:27:24 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,14 @@ int	ft_dielectric_scatter(const t_ray r_in, const t_hit_rec rec,
 	refracted = ft_refract(unit_direction, rec.normal, ri);
 	*scattered = ft_ray_new(rec.p, refracted);
 	return (true);
+}
+
+int	ft_false_scatter(const t_ray r_in, const t_hit_rec rec,
+	t_color *attenuation, t_ray *scattered)
+{
+	(void)r_in;
+	(void)rec;
+	(void)attenuation;
+	(void)scattered;
+	return (false);
 }

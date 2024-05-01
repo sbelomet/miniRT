@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/30 12:49:52 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/30 15:58:28 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/01 10:15:05 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,9 @@ t_vector3	ft_refract(const t_vector3 uv,
 					1.0 - ft_vec3_len_squared(r_out_perp))));
 	return (ft_vec3_add(r_out_perp, r_out_parallel));
 }
-
+/* 
 t_color	ft_emmited(double u, double v, const t_vector3 p)
 {
 	return 
 }
+ */

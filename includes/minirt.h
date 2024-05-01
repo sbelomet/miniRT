@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/30 12:52:57 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/01 14:56:15 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ enum e_materials
 	LAMBERTIAN,
 	METAL,
 	DIELECTRIC,
+	EMMISSIVE,
 };
 
 /* Basic units structures */
@@ -105,6 +106,7 @@ typedef struct s_hit_rec
 	struct s_material	*mat;
 	double				t;
 	int					front_face;
+	t_color				emmited;
 	struct s_base		*base;
 }						t_hit_rec;
 
@@ -168,6 +170,7 @@ typedef struct s_plane
 	t_vector3	coord;
 	t_vector3	norm;
 	t_color		color;
+	t_material	*mat;
 }				t_plane;
 
 typedef struct s_cylin
@@ -192,6 +195,8 @@ typedef struct s_objects
 	int					id;
 	int					type;
 	void				*object;
+	int					(*ft_hit)(const void *, const t_ray,
+			const t_inter, t_hit_rec *);
 	struct s_objects	*next;
 }					t_objects;
 
@@ -306,7 +311,12 @@ double		ft_deg_to_rad(double deg);
 double		ft_rad_to_deg(double rad);
 
 /* Hittable Utils */
+void		ft_set_hit_func(t_objects *new_object, int type);
 int			ft_hit_anything(t_objects *list, const t_ray r,
+				const t_inter ray_t, t_hit_rec *rec);
+int			ft_hit_sphere(const void *sphere_obj, const t_ray r,
+				const t_inter ray_t, t_hit_rec *rec);
+int			ft_hit_plane(const void *plane_obj, const t_ray r,
 				const t_inter ray_t, t_hit_rec *rec);
 
 /* Vector3 Utils */
@@ -360,6 +370,8 @@ int			ft_lamb_scatter(const t_ray r_in, const t_hit_rec rec,
 int			ft_metal_scatter(const t_ray r_in, const t_hit_rec rec,
 				t_color *attenuation, t_ray *scattered);
 int			ft_dielectric_scatter(const t_ray r_in, const t_hit_rec rec,
+				t_color *attenuation, t_ray *scattered);
+int			ft_false_scatter(const t_ray r_in, const t_hit_rec rec,
 				t_color *attenuation, t_ray *scattered);
 
 /* Axis-Aligned Bounding Boxes Utils */

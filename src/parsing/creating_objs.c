@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:05:07 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/30 11:36:40 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:04:39 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ t_plane	*create_plane(char **args)
 	plane->color = parse_color(args[2]);
 	if (out_range_color(plane->color))
 		return (free(plane), print_error_null("Error\n", RANGE_ERR));
+	plane->color = ft_color_byte_to_per(plane->color);
+	plane->mat = ft_mat_new(LAMBERTIAN, plane->color, ft_lamb_scatter);
 	return (plane);
 }
 
@@ -62,6 +64,15 @@ t_sphere	*create_sphere(char **args)
 	if (out_range_color(sphere->color))
 		return (free(sphere), print_error_null("Error\n", RANGE_ERR));
 	sphere->color = ft_color_byte_to_per(sphere->color);
-	sphere->mat = ft_mat_new(LAMBERTIAN, sphere->color, ft_lamb_scatter);
+	//static int i = -1;
+	//if (++i == 0)
+	//{
+	//	sphere->color = ft_color_mult(sphere->color, 2);
+	//	sphere->mat = ft_mat_new(EMMISSIVE, sphere->color, ft_false_scatter);
+	//}
+	//else if (i == 1 || i == 2)
+	//	sphere->mat = ft_mat_new(METAL, sphere->color, ft_metal_scatter);
+	//else
+		sphere->mat = ft_mat_new(LAMBERTIAN, sphere->color, ft_lamb_scatter);
 	return (sphere);
 }

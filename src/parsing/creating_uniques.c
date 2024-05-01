@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:08:42 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/30 11:52:17 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/01 10:10:35 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,5 +59,6 @@ t_alight	*create_amblight(char **args)
 	amblight->color = parse_color(args[1]);
 	if (out_range_color(amblight->color))
 		return (free(amblight), print_error_null("Error\n", RANGE_ERR));
+	amblight->color = ft_color_byte_to_per(amblight->color);
 	return (amblight);
 }

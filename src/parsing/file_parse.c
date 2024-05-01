@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:20:25 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/30 10:43:57 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/01 14:29:19 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ static bool	add_token(t_base *base, int type, char **args)
 	new_object->next = NULL;
 	new_object->type = type;
 	new_object->object = create_object(args, type);
+	ft_set_hit_func(new_object, type);
 	if (new_object->object == NULL)
 		return (free(new_object), false);
 	if (base->first_object == NULL)

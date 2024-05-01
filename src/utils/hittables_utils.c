@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/25 12:34:34 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/25 15:25:18 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/01 14:28:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,4 +47,12 @@ void	ft_hittable_add(t_hittable **hittable, t_hittable *new)
 	}
 	last = ft_hittable_last(*hittable);
 	last->next = new;
+}
+
+void	ft_set_hit_func(t_objects *new_object, int type)
+{
+	if (type == SPHERE)
+		new_object->ft_hit = ft_hit_sphere;
+	else if (type == PLANE)
+		new_object->ft_hit = ft_hit_plane;
 }

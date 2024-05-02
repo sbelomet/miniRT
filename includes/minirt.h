@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/01 14:56:15 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/02 14:08:32 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,8 +178,10 @@ typedef struct s_cylin
 	t_vector3	coord;
 	t_vector3	ori;
 	double		diam;
+	double		radius;
 	double		height;
 	t_color		color;
+	t_material	*mat;
 }				t_cylin;
 
 /* Other structures */
@@ -247,7 +249,7 @@ bool		out_range(double min, double max, double value);
 /* Parsing utils 2 */
 bool		line_regex(char *line);
 int			extract_type(char *arg);
-bool 		only_numbers(char *arg);
+bool		only_numbers(char *arg);
 bool		right_args(char **args, int type);
 t_objects	*get_last_object(t_objects *list);
 
@@ -317,6 +319,8 @@ int			ft_hit_anything(t_objects *list, const t_ray r,
 int			ft_hit_sphere(const void *sphere_obj, const t_ray r,
 				const t_inter ray_t, t_hit_rec *rec);
 int			ft_hit_plane(const void *plane_obj, const t_ray r,
+				const t_inter ray_t, t_hit_rec *rec);
+int			ft_hit_cylinder(const void *cylinder_obj, const t_ray r,
 				const t_inter ray_t, t_hit_rec *rec);
 
 /* Vector3 Utils */

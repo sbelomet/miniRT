@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:18:00 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/01 15:52:52 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/02 15:07:42 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,7 @@ int	ft_hit_plane(const void *plane_obj, const t_ray r,
 	denom = ft_vec3_dot(unit_norm, r.dir);
 	if (fabs(denom) < 1e-8)
 		return (false);
-	t = (ft_vec3_dot(unit_norm, plane->coord) - ft_vec3_dot(unit_norm, r.origin))
-		/ denom;
+	t = ft_vec3_dot(ft_vec3_sub(plane->coord, r.origin), unit_norm) / denom;
 	if (!ft_inter_contains(ray_t, t))
 		return (false);
 	rec->t = t;
@@ -79,6 +78,46 @@ int	ft_hit_sphere(const void *sphere_obj, const t_ray r,
 			return (false);
 	}
 	ft_sphere_rec_setup(rec, sphere, r, root);
+	return (true);
+}
+
+int	ft_hit_cylinder(const void *cylinder_obj, const t_ray r,
+	const t_inter ray_t, t_hit_rec *rec)
+{
+	double		quad[3];
+	double		disc;
+	t_cylin		*cylin;
+	double		root[3];
+	double		t;
+
+	cylin = (t_cylin *)cylinder_obj;
+	quad[0] = r.dir.x * r.dir.x + r.dir.z * r.dir.z;
+	quad[1] = 2 * (r.dir.x * (r.origin.x - cylin->coord.x)
+			+ r.dir.z * (r.origin.z));
+	quad[2] = (r.origin.x - cylin->coord.x) * (r.origin.x - cylin->coord.x)
+		+ (r.origin.z - cylin->coord.z) * (r.origin.z - cylin->coord.z)
+		- (cylin->radius * cylin->radius);
+	disc = quad[1] * quad[1] - 4 * quad[0] * quad[2];
+	if (disc < 1e-8)
+		return (false);
+	root[1] = (-quad[1] - sqrt(disc)) / (2 * quad[0]);
+	root[2] = (-quad[1] + sqrt(disc)) / (2 * quad[0]);
+	root[0] = root[1];
+	if (root[1] > root[2])
+		root[0] = root[2];
+	t = r.origin.y + root[0] * r.dir.y;
+	//if (t < cylin->coord.y && t > cylin->coord.y + cylin->height)
+	//	return (false);
+	if (!ft_inter_contains(ray_t, t))
+		return (false);
+	rec->t = t;
+	rec->p = ft_ray_at(r, rec->t);
+	rec->normal = ft_set_face_normal(r, cylin->ori, rec);
+	rec->mat = cylin->mat;
+	if (cylin->mat->material == EMMISSIVE)
+		rec->emmited = cylin->color;
+	else
+		rec->emmited = ft_color_new(0, 0, 0, 0);
 	return (true);
 }
 

@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:05:07 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/01 15:04:39 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/02 14:08:52 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,13 @@ t_cylin	*create_cylinder(char **args)
 	if (out_range_norm(cylinder->ori))
 		return (free(cylinder), print_error_null("Error\n", RANGE_ERR));
 	cylinder->diam = ft_atof(args[2]);
+	cylinder->radius = cylinder->diam / 2;
 	cylinder->height = ft_atof(args[3]);
 	cylinder->color = parse_color(args[4]);
 	if (out_range_color(cylinder->color))
 		return (free(cylinder), print_error_null("Error\n", RANGE_ERR));
+	cylinder->color = ft_color_byte_to_per(cylinder->color);
+	cylinder->mat = ft_mat_new(LAMBERTIAN, cylinder->color, ft_lamb_scatter);
 	return (cylinder);
 }
 
@@ -46,6 +49,7 @@ t_plane	*create_plane(char **args)
 	if (out_range_color(plane->color))
 		return (free(plane), print_error_null("Error\n", RANGE_ERR));
 	plane->color = ft_color_byte_to_per(plane->color);
+	//plane->mat = ft_mat_new(METAL, plane->color, ft_metal_scatter);
 	plane->mat = ft_mat_new(LAMBERTIAN, plane->color, ft_lamb_scatter);
 	return (plane);
 }

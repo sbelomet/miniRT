@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:18:00 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/02 15:07:42 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/07 15:49:37 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,32 +87,36 @@ int	ft_hit_cylinder(const void *cylinder_obj, const t_ray r,
 	double		quad[3];
 	double		disc;
 	t_cylin		*cylin;
-	double		root[3];
+	double		root[4];
 	double		t;
 
 	cylin = (t_cylin *)cylinder_obj;
 	quad[0] = r.dir.x * r.dir.x + r.dir.z * r.dir.z;
-	quad[1] = 2 * (r.dir.x * (r.origin.x - cylin->coord.x)
-			+ r.dir.z * (r.origin.z));
-	quad[2] = (r.origin.x - cylin->coord.x) * (r.origin.x - cylin->coord.x)
-		+ (r.origin.z - cylin->coord.z) * (r.origin.z - cylin->coord.z)
-		- (cylin->radius * cylin->radius);
+	if (fabs(quad[0]) < 1e-8)
+		return (false);
+	quad[1] = 2 * r.dir.x * (r.origin.x - cylin->coord.x)
+		+ 2 * r.dir.z * (r.origin.z - cylin->coord.z);
+	quad[2] = pow(r.origin.x - cylin->coord.x, 2)
+		+ pow(r.origin.z - cylin->coord.z, 2) - pow(cylin->radius, 2);
 	disc = quad[1] * quad[1] - 4 * quad[0] * quad[2];
 	if (disc < 1e-8)
 		return (false);
-	root[1] = (-quad[1] - sqrt(disc)) / (2 * quad[0]);
-	root[2] = (-quad[1] + sqrt(disc)) / (2 * quad[0]);
-	root[0] = root[1];
-	if (root[1] > root[2])
-		root[0] = root[2];
-	t = r.origin.y + root[0] * r.dir.y;
-	//if (t < cylin->coord.y && t > cylin->coord.y + cylin->height)
-	//	return (false);
+	root[0] = (-quad[1] - sqrt(disc)) / (2 * quad[0]);
+	root[1] = (-quad[1] + sqrt(disc)) / (2 * quad[0]);
+	if (root[0] > root[1])
+		ft_swap(&root[0], &root[1]);
+	root[2] = r.origin.y + root[0] * r.dir.y;
+	root[3] = r.origin.y + root[1] * r.dir.y;
+	if (fabs(root[2]) < cylin->height / 2)
+		t = root[0];
+	if (fabs(root[3]) < cylin->height / 2
+		&& root[1] < t)
+		t = root[1];
 	if (!ft_inter_contains(ray_t, t))
 		return (false);
 	rec->t = t;
 	rec->p = ft_ray_at(r, rec->t);
-	rec->normal = ft_set_face_normal(r, cylin->ori, rec);
+	rec->normal = ft_set_face_normal(r, ft_vec3_sub(cylin->coord, rec->p), rec); //TODO
 	rec->mat = cylin->mat;
 	if (cylin->mat->material == EMMISSIVE)
 		rec->emmited = cylin->color;

@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/02 14:08:32 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/07 11:44:33 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,6 +180,8 @@ typedef struct s_cylin
 	double		diam;
 	double		radius;
 	double		height;
+	t_vector3	min;
+	t_vector3	max;
 	t_color		color;
 	t_material	*mat;
 }				t_cylin;
@@ -311,6 +313,7 @@ double		ft_rand_double_range(t_base *base, double min, double max);
 double		ft_rand_double(t_base *base);
 double		ft_deg_to_rad(double deg);
 double		ft_rad_to_deg(double rad);
+void		ft_swap(double *a, double *b);
 
 /* Hittable Utils */
 void		ft_set_hit_func(t_objects *new_object, int type);
@@ -345,6 +348,8 @@ t_vector3	ft_vec3_rand_range(t_base *base, const double min,
 t_vector3	ft_vec3_rand_unit_sphere(t_base *base);
 t_vector3	ft_vec3_rand_unit(t_base *base);
 t_vector3	ft_vec3_rand_hemis(t_base *base, const t_vector3 normal);
+int			ft_vec3_grtr(const t_vector3 v1, const t_vector3 v2);
+int			ft_vec3_lssr(const t_vector3 v1, const t_vector3 v2);
 
 /* Ray Utils */
 t_ray		ft_ray_new(const t_vector3 origin, const t_vector3 dir);

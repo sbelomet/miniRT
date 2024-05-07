@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:05:07 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/02 14:08:52 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/07 15:22:20 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ t_cylin	*create_cylinder(char **args)
 	cylinder->diam = ft_atof(args[2]);
 	cylinder->radius = cylinder->diam / 2;
 	cylinder->height = ft_atof(args[3]);
+	cylinder->min = ft_vec3_sub(cylinder->coord,
+			ft_vec3_mult(cylinder->ori, cylinder->height / 2));
+	cylinder->max = ft_vec3_add(cylinder->coord,
+			ft_vec3_mult(cylinder->ori, cylinder->height / 2));
 	cylinder->color = parse_color(args[4]);
 	if (out_range_color(cylinder->color))
 		return (free(cylinder), print_error_null("Error\n", RANGE_ERR));
@@ -68,15 +72,15 @@ t_sphere	*create_sphere(char **args)
 	if (out_range_color(sphere->color))
 		return (free(sphere), print_error_null("Error\n", RANGE_ERR));
 	sphere->color = ft_color_byte_to_per(sphere->color);
-	//static int i = -1;
-	//if (++i == 0)
-	//{
-	//	sphere->color = ft_color_mult(sphere->color, 2);
-	//	sphere->mat = ft_mat_new(EMMISSIVE, sphere->color, ft_false_scatter);
-	//}
+	static int i = -1;
+	if (++i < 2)
+	{
+		sphere->color = ft_color_mult(sphere->color, 2);
+		sphere->mat = ft_mat_new(EMMISSIVE, sphere->color, ft_false_scatter);
+	}
 	//else if (i == 1 || i == 2)
 	//	sphere->mat = ft_mat_new(METAL, sphere->color, ft_metal_scatter);
-	//else
+	else
 		sphere->mat = ft_mat_new(LAMBERTIAN, sphere->color, ft_lamb_scatter);
 	return (sphere);
 }

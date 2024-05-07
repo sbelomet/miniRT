@@ -6,7 +6,7 @@
 #    By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/14 10:06:00 by lgosselk          #+#    #+#              #
-#    Updated: 2024/04/30 12:51:25 by sbelomet         ###   ########.fr        #
+#    Updated: 2024/05/07 11:31:24 by sbelomet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,9 +49,9 @@ F_INIT			=	base_init camera_init
 F_PARSING		=	file_parse creating_objs creating_uniques
 F_COLOR			=	color color_ops1
 F_DRAW			=	draw
-F_MATH_UTILS	=	rng angles
+F_MATH_UTILS	=	rng angles swap
 F_AABB_UTILS	=	aabb
-F_VEC3_UTILS	=	vector3 vector3_ops1 vector3_ops2 vector3_rand
+F_VEC3_UTILS	=	vector3 vector3_ops1 vector3_ops2 vector3_rand vector3_comp
 F_RAY_UTILS		=	ray
 F_HITBL_UTILS	=	hittable
 F_MATER_UITLS	=	scatter_funcs material mat_ray_mods

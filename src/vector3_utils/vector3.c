@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vector3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 15:44:42 by scherty           #+#    #+#             */
-/*   Updated: 2024/04/24 13:44:48 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/09 10:31:16 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_vector3	ft_vec3_new(const double x, const double y, const double z)
 	v.x = x;
 	v.y = y;
 	v.z = z;
+    v.w = 1;
 	return (v);
 }
 

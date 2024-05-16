@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_parse.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:20:25 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/01 14:29:19 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/07 11:57:34 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,5 +123,7 @@ int	file_parse(t_base *base, char *filepath)
 		line = get_next_line(infile);
 	}
 	close(infile);
+    if (!default_uniques(base))
+        return (set_exit_code(base, 1, 1));
 	return (EXIT_SUCCESS);
 }

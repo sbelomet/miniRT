@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   hittable.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:18:00 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/07 15:49:37 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/08 16:00:13 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,8 @@ int	ft_hit_cylinder(const void *cylinder_obj, const t_ray r,
 		return (false);
 	rec->t = t;
 	rec->p = ft_ray_at(r, rec->t);
-	rec->normal = ft_set_face_normal(r, ft_vec3_sub(cylin->coord, rec->p), rec); //TODO
+	rec->normal = ft_set_face_normal(r, ft_vec3_unit(ft_vec3_new(rec->p.x
+					- cylin->coord.x, 0, rec->p.z - cylin->coord.z)), rec);
 	rec->mat = cylin->mat;
 	if (cylin->mat->material == EMMISSIVE)
 		rec->emmited = cylin->color;

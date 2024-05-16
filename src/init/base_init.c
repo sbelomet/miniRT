@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   base_init.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:47:15 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/30 11:03:06 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/16 09:37:45 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 void	set_base(t_base *base)
 {
+	base->select.id = -1;
+    base->select.type = -1;
+	base->select.type_add = -1;
+    base->select.modified = false;
+    base->select.translation = false;
 	base->alloc = NULL;
 	base->exit_code = 0;
 	base->mlx_ptr = NULL;

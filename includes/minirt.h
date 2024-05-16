@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/07 11:44:33 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/16 09:37:21 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,24 @@
 # include "../libft/includes/libft.h"
 
 /* Defines */
+
+/* Utils macros */
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
 # define SAMPLE_PPIXEL 40
+# define EPSILON 1e-6
 # define PIX_SAMPLE_SCALE 0.025
 # define MAX_DEPTH 10
 
+/* Key mapping macros */
+# define TAB_KEY 48
+# define ESC_KEY 53
+# define PLUS_KEY 69
+# define MINUS_KEY 78
+# define RENDER_KEY 76
+# define DE_SELECT_KEY 36
+
+/* Messages macros */
 # define TITLE "BetterBlender"
 # define MALLOC_ERR "Malloc error"
 # define EXT_ERR "Invalid extension file"
@@ -41,7 +53,6 @@
 # define IMG_ERR "Image initialisation failure"
 # define FILE_ERR "Cannot open file with path: "
 # define WIN_ERR "Window initialisation failure"
-
 # define ISS_ERR "whitespace that is not a space detected"
 # define OBJNAME_ERR "Invalid object name while parsing file"
 # define REGEX_ERR "File contains some not allowed characters"
@@ -62,6 +73,12 @@ enum e_types
 	CYLINDER,
 };
 
+enum e_type_add
+{
+	HEIGHT,
+	WIDTH,
+};
+
 enum e_materials
 {
 	LAMBERTIAN,
@@ -77,6 +94,7 @@ typedef struct s_vector3
 	double	x;
 	double	y;
 	double	z;
+	double	w;
 }			t_vector3;
 
 typedef struct s_color
@@ -188,6 +206,15 @@ typedef struct s_cylin
 
 /* Other structures */
 
+typedef	struct s_selected
+{
+	int		id;
+	int		type;
+	int		type_add; // HEIGHT OR WIDTH, ONLY FOR CYLINDER
+	bool	modified;
+	bool    translation;
+}				t_selected;
+
 typedef struct s_hittable
 {
 	void				*object;
@@ -235,7 +262,47 @@ typedef struct s_base
 	unsigned long	seed;
 	t_objects		*first_object;
 	t_hittable		*first_hittable;
+    t_selected		select;
 }					t_base;
+
+/* Alternative structures --------------- */
+
+typedef struct s_hit
+{
+	double				t;
+    int                 id;
+	double				t_min;
+    t_vector3			point;
+    t_color             color;
+    t_vector3			normal;
+}						t_hit;
+
+typedef struct s_qua_sol
+{
+	double		t1;
+	double		t2;
+	double		delta;
+}				t_qua_sol;
+
+typedef struct s_equation
+{
+	double	a;
+	double	b;
+	double	c;
+    double  t;
+	double	t1;
+	double	t2;
+    t_vector3   oc;
+}	            t_equation;
+
+typedef struct s_matrix
+{
+	double m[4][4];
+}				t_matrix;
+
+void    ft_render2(t_base *base);
+
+/* ------------------------------------- */
 
 /* FUNCTIONS */
 
@@ -290,6 +357,15 @@ t_cylin		*create_cylinder(char **args);
 t_light		*create_light(char **args);
 t_camera	*create_camera(char **args);
 t_alight	*create_amblight(char **args);
+
+/* Defaults */
+bool		default_uniques(t_base *base);
+
+/* ---------------- */
+
+/***   HOOKS  ***/
+void		ft_hooks(t_base *base);
+bool		select_object(t_base *base, int x, int y);
 
 /* ---------------- */
 

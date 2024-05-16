@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+         #
+#    By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/14 10:06:00 by lgosselk          #+#    #+#              #
-#    Updated: 2024/05/07 11:31:24 by sbelomet         ###   ########.fr        #
+#    Updated: 2024/05/07 15:59:03 by lgosselk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,6 +31,7 @@ INIT_DIR		=	init/
 OBJS_DIR		=	objs/
 DRAW_DIR		=	draw/
 UTILS_DIR		=	utils/
+HOOKS_DIR		=	hooks/
 ERRORS_DIR		=	errors/
 PARSING_DIR		=	parsing/
 RAY_UTILS_DIR	=	ray_utils/
@@ -44,11 +45,12 @@ INTRV_UTILS_DIR	=	intervals_utils/
 
 # Files
 F_ERRORS		=	errors
-F_UTILS			=	cleaning hittables_utils parsing_utils parsing_utils2
+F_UTILS			=	cleaning hittables_utils parsing_utils parsing_utils2 test_engine2
 F_INIT			=	base_init camera_init
-F_PARSING		=	file_parse creating_objs creating_uniques
+F_PARSING		=	file_parse creating_objs creating_uniques defaults
 F_COLOR			=	color color_ops1
 F_DRAW			=	draw
+F_HOOKS			=	handle_hooks
 F_MATH_UTILS	=	rng angles swap
 F_AABB_UTILS	=	aabb
 F_VEC3_UTILS	=	vector3 vector3_ops1 vector3_ops2 vector3_rand vector3_comp
@@ -60,6 +62,7 @@ F_INTRV_UTILS	=	intervals intervals_ops
 FILES		=	$(addprefix $(INIT_DIR), $(F_INIT)) \
 				$(addprefix $(DRAW_DIR), $(F_DRAW)) \
 				$(addprefix $(UTILS_DIR), $(F_UTILS)) \
+				$(addprefix $(HOOKS_DIR), $(F_HOOKS)) \
 				$(addprefix $(ERRORS_DIR), $(F_ERRORS)) \
 				$(addprefix $(PARSING_DIR), $(F_PARSING)) \
 				$(addprefix $(COLOR_UTILS_DIR), $(F_COLOR)) \
@@ -91,6 +94,7 @@ $(OBJS_DIR):
 	@mkdir -p $(OBJS_DIR)
 	@mkdir -p $(OBJS_DIR)$(UTILS_DIR)
 	@mkdir -p $(OBJS_DIR)$(INIT_DIR)
+	@mkdir -p $(OBJS_DIR)$(HOOKS_DIR)
 	@mkdir -p $(OBJS_DIR)$(ERRORS_DIR)
 	@mkdir -p $(OBJS_DIR)$(PARSING_DIR)
 	@mkdir -p $(OBJS_DIR)$(COLOR_UTILS_DIR)

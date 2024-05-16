@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:10:13 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/30 12:38:35 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/13 10:36:20 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,9 @@ int	main(const int argc, char **argv)
 	if (ft_base_init(&base) == 1)
 		on_destroy(&base);
 	ft_camera_init(&base);
-	ft_render(&base);
-	//mlx_hook(base.win_ptr, 2, (1L << 0), key_hook, &base);
-	mlx_hook(base.win_ptr, 17, (1L << 0), close_window, &base);
-	mlx_loop(base.mlx_ptr);
+	//ft_render(&base);
+    ft_render2(&base);
+    ft_hooks(&base);
 	on_destroy(&base);
 	return (EXIT_SUCCESS);
 }

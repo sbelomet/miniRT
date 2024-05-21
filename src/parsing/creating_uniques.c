@@ -6,7 +6,7 @@
 /*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:08:42 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/07 11:49:46 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/05/17 10:32:26 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ t_camera	*create_camera(char **args)
 		return (print_error_null("Error\n", MALLOC_ERR));
 	camera->lookfrom = parse_vector(args[0]);
 	camera->lookat = parse_vector(args[1]);
-	if (out_range_norm(camera->ori))
+	if (out_range_norm(camera->lookat))
 		return (free(camera), print_error_null("Error\n", RANGE_ERR));
 	camera->vfov = ft_atoi(args[2]);
 	if (camera->vfov < 0 || camera->vfov > 180)

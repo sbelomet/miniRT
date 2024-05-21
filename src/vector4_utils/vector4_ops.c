@@ -1,25 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   material.c                                         :+:      :+:    :+:   */
+/*   vector4_ops.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 10:53:59 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/21 15:38:43 by sbelomet         ###   ########.fr       */
+/*   Created: 2024/05/17 14:26:35 by scherty           #+#    #+#             */
+/*   Updated: 2024/05/21 15:05:38 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_material	*ft_mat_new(t_color (*ft_comp_color)
-	(t_objects *, t_hit_rec *, t_light *))
+t_vector4	ft_vec4_mult_mtrx(const t_vector4 v, const t_matrix m)
 {
-	t_material	*mat;
+	t_vector4	res;
 
-	mat = (t_material *)malloc(sizeof(t_material));
-	mat->ft_comp_color = ft_comp_color;
-	mat->reflect = 0;
-	mat->shine = 0;
-	return (mat);
+	res.x = v.x * m.m[0][0] + v.y * m.m[0][1]
+		+ v.z * m.m[0][2] + v.w * m.m[0][3];
+	res.y = v.x * m.m[1][0] + v.y * m.m[1][1]
+		+ v.z * m.m[1][2] + v.w * m.m[1][3];
+	res.z = v.x * m.m[2][0] + v.y * m.m[2][1]
+		+ v.z * m.m[2][2] + v.w * m.m[2][3];
+	res.w = v.x * m.m[3][0] + v.y * m.m[3][1]
+		+ v.z * m.m[3][2] + v.w * m.m[3][3];
+	return (res);
 }

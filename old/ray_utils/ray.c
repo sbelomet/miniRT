@@ -6,36 +6,22 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:13:10 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/21 15:12:29 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/07 11:44:39 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_ray	ft_ray_new(const t_vector3 p1, const t_vector3 p2)
+t_ray	ft_ray_new(const t_vector3 origin, const t_vector3 dir)
 {
 	t_ray	ray;
 
-	ray.p1 = p1;
-	ray.p2 = p2;
-	ray.lab = ft_vec3_sub(p2, p1);
+	ray.origin = origin;
+	ray.dir = dir;
 	return (ray);
 }
 
-int	ft_generate_ray(t_camera cam, float proj_screen_x, float proj_screen_y, t_ray *camera_ray)
-{
-	t_vector3	screen_world_p1;
-	t_vector3	screen_world_coord;
-
-	screen_world_p1 = ft_vec3_add(cam.proj_screen_center, ft_vec3_mult(cam.proj_screen_u, proj_screen_x));
-	screen_world_coord = ft_vec3_add(screen_world_p1, ft_vec3_mult(cam.proj_screen_v, proj_screen_y));
-	camera_ray->p1 = cam.lookfrom;
-	camera_ray->p2 = screen_world_coord;
-	camera_ray->lab = ft_vec3_sub(screen_world_coord, cam.lookfrom);
-	return (true);
-}
-
-/* t_vector3	ft_ray_at(const t_ray ray, const double t)
+t_vector3	ft_ray_at(const t_ray ray, const double t)
 {
 	return (ft_vec3_add(ray.origin, ft_vec3_mult(ray.dir, t)));
 }
@@ -93,7 +79,7 @@ t_color	ft_ray_color(t_base *base, t_ray r, int depth, t_objects *world)
 	col_from_scatter = ft_color_mult_color(attenuation,
 			ft_ray_color(base, scattered, depth - 1, world));
 	return (ft_color_add(rec.emmited, col_from_scatter));
-} */
+}
 
 /* 
 		return (ft_color_mult(ft_color_new(0, rec.normal.x + 1,

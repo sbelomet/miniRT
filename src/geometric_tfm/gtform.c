@@ -1,25 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   material.c                                         :+:      :+:    :+:   */
+/*   gtform.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 10:53:59 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/21 15:38:43 by sbelomet         ###   ########.fr       */
+/*   Created: 2024/05/14 12:48:17 by sbelomet          #+#    #+#             */
+/*   Updated: 2024/05/21 15:24:15 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_material	*ft_mat_new(t_color (*ft_comp_color)
-	(t_objects *, t_hit_rec *, t_light *))
+t_gtform	ft_gtf_new(void)
 {
-	t_material	*mat;
+	t_gtform	gt;
 
-	mat = (t_material *)malloc(sizeof(t_material));
-	mat->ft_comp_color = ft_comp_color;
-	mat->reflect = 0;
-	mat->shine = 0;
-	return (mat);
+	gt.fwdtfm = ft_mtrx_new();
+	gt.bcktfm = ft_mtrx_new();
+	return (gt);
+}
+
+t_gtform	ft_gtf_new2(const t_matrix fwd, const t_matrix bck)
+{
+	t_gtform	gt;
+
+	gt.fwdtfm = fwd;
+	gt.bcktfm = bck;
+	return (gt);
 }

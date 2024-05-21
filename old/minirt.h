@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/21 15:42:43 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/21 15:29:49 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,9 +35,6 @@
 # define EPSILON 1e-6
 # define PIX_SAMPLE_SCALE 0.025
 # define MAX_DEPTH 10
-
-# define FWDFORM 1
-# define BCKFORM 0
 
 /* Key mapping macros */
 # define TAB_KEY 48
@@ -74,7 +71,6 @@ enum e_types
 	SPHERE,
 	PLANE,
 	CYLINDER,
-	CONE,
 };
 
 enum e_type_add
@@ -146,11 +142,12 @@ typedef struct s_hit_rec
 
 typedef struct s_material
 {
-	double	reflect;
-	double	shine;
-	t_color	(*ft_comp_color)(t_objects *, t_hit_rec *, t_light *);
-}			t_material;
-
+	int		material;
+	t_color	albedo;
+	double	fuzz;
+	double	ref_index;
+	int		(*ft_scatter)(const t_ray, const t_hit_rec, t_color *, t_ray *);
+}				t_material;
 
 typedef struct s_aabb
 {
@@ -192,46 +189,33 @@ typedef struct s_light
 
 typedef struct s_sphere
 {
-	t_vector3			center;
-	double				diam;
-	double				radius;
-	t_color				color;
-	struct s_material	*mat;
-	t_gtform			tm;
-}						t_sphere;
+	t_vector3	center;
+	double		diam;
+	double		radius;
+	t_color		color;
+	t_material	*mat;
+}				t_sphere;
 
 typedef struct s_plane
 {
-	t_vector3			coord;
-	t_vector3			norm;
-	t_color				color;
-	struct s_material	*mat;
-	t_gtform			tm;
-}						t_plane;
+	t_vector3	coord;
+	t_vector3	norm;
+	t_color		color;
+	t_material	*mat;
+}				t_plane;
 
 typedef struct s_cylin
 {
-	t_vector3			coord;
-	t_vector3			ori;
-	double				diam;
-	double				radius;
-	double				height;
-	t_color				color;
-	struct s_material	*mat;
-	t_gtform			tm;
-}						t_cylin;
-
-typedef struct s_cone
-{
-	t_vector3			coord;
-	t_vector3			ori;
-	double				diam;
-	double				radius;
-	double				height;
-	t_color				color;
-	struct s_material	*mat;
-	t_gtform			tm;
-}						t_cone;
+	t_vector3	coord;
+	t_vector3	ori;
+	double		diam;
+	double		radius;
+	double		height;
+	t_vector3	min;
+	t_vector3	max;
+	t_color		color;
+	t_material	*mat;
+}				t_cylin;
 
 /* Other structures */
 
@@ -255,7 +239,8 @@ typedef struct s_objects
 	int					id;
 	int					type;
 	void				*object;
-	int					(*ft_hit)(const void *, const t_ray, t_hit_rec *);
+	int					(*ft_hit)(const void *, const t_ray,
+			const t_inter, t_hit_rec *);
 	struct s_objects	*next;
 }					t_objects;
 
@@ -289,7 +274,7 @@ typedef struct s_base
 	t_light			*light;
 	unsigned long	seed;
 	t_objects		*first_object;
-	t_light			*first_light;
+	t_hittable		*first_hittable;
 	t_selected		select;
 }					t_base;
 
@@ -427,7 +412,6 @@ double		ft_rand_double(t_base *base);
 double		ft_deg_to_rad(double deg);
 double		ft_rad_to_deg(double rad);
 void		ft_swap(double *a, double *b);
-int			ft_close_enough(const double f1, const double f2);
 
 /* Hittable Utils */
 void		ft_set_hit_func(t_objects *new_object, int type);
@@ -439,11 +423,6 @@ int			ft_hit_plane(const void *plane_obj, const t_ray r,
 				const t_inter ray_t, t_hit_rec *rec);
 int			ft_hit_cylinder(const void *cylinder_obj, const t_ray r,
 				const t_inter ray_t, t_hit_rec *rec);
-int			ft_anything_hit(t_objects *list, const t_ray r, t_hit_rec *rec);
-int			ft_sphere_hit(const void *sphere_obj, const t_ray r, t_hit_rec *rec);
-int			ft_plane_hit(const void *plane_obj, const t_ray r, t_hit_rec *rec);
-int			ft_cylinder_hit(const void *cylinder_obj, const t_ray r, t_hit_rec *rec);
-int			ft_cone_hit(const void *cone_obj, const t_ray r, t_hit_rec *rec);
 
 /* Vector3 Utils */
 t_vector3	ft_vec3_new(const double x, const double y, const double z);

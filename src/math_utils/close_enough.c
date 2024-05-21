@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   material.c                                         :+:      :+:    :+:   */
+/*   close_enough.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/24 10:53:59 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/21 15:38:43 by sbelomet         ###   ########.fr       */
+/*   Created: 2024/05/09 11:08:17 by sbelomet          #+#    #+#             */
+/*   Updated: 2024/05/21 15:42:20 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_material	*ft_mat_new(t_color (*ft_comp_color)
-	(t_objects *, t_hit_rec *, t_light *))
+int	ft_close_enough(const double f1, const double f2)
 {
-	t_material	*mat;
-
-	mat = (t_material *)malloc(sizeof(t_material));
-	mat->ft_comp_color = ft_comp_color;
-	mat->reflect = 0;
-	mat->shine = 0;
-	return (mat);
+	if (fabs(f1 - f2) < 1e-21)
+		return (true);
+	return (false);
 }

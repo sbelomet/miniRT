@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:10:13 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/13 10:36:20 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/05/21 15:44:02 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int	main(const int argc, char **argv)
 		on_destroy(&base);
 	ft_camera_init(&base);
 	//ft_render(&base);
-    ft_render2(&base);
-    ft_hooks(&base);
+	ft_render2(&base);
+	ft_hooks(&base);
 	on_destroy(&base);
 	return (EXIT_SUCCESS);
 }

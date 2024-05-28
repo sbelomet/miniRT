@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:05:07 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/08 10:22:34 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ t_cylin	*create_cylinder(char **args)
 	cylinder->diam = ft_atof(args[2]);
 	cylinder->radius = cylinder->diam / 2;
 	cylinder->height = ft_atof(args[3]);
-	cylinder->min = ft_vec3_sub(cylinder->coord,
-			ft_vec3_mult(cylinder->ori, cylinder->height / 2));
-	cylinder->max = ft_vec3_add(cylinder->coord,
-			ft_vec3_mult(cylinder->ori, cylinder->height / 2));
 	cylinder->color = parse_color(args[4]);
 	if (out_range_color(cylinder->color))
 		return (free(cylinder), print_error_null("Error\n", RANGE_ERR));
 	cylinder->color = ft_color_byte_to_per(cylinder->color);
-	cylinder->mat = ft_mat_new(LAMBERTIAN, cylinder->color, ft_lamb_scatter);
+	cylinder->mat = ft_mat_new(ft_comp_diffuse_color);
+	if (!cylinder->mat)
+		return (free(cylinder), print_error_null("Error\n", MAT_ERR));
+	ft_gtf_set_transform(&cylinder->tm, cylinder->coord, ft_vec3_new(0, 0, 0),
+		ft_vec3_new(cylinder->radius, cylinder->radius, cylinder->height));
 	return (cylinder);
 }
 
@@ -53,8 +53,11 @@ t_plane	*create_plane(char **args)
 	if (out_range_color(plane->color))
 		return (free(plane), print_error_null("Error\n", RANGE_ERR));
 	plane->color = ft_color_byte_to_per(plane->color);
-	//plane->mat = ft_mat_new(METAL, plane->color, ft_metal_scatter);
-	plane->mat = ft_mat_new(LAMBERTIAN, plane->color, ft_lamb_scatter);
+	plane->mat = ft_mat_new(ft_comp_diffuse_color);
+	if (!plane->mat)
+		return (free(plane), print_error_null("Error\n", MAT_ERR));
+	ft_gtf_set_transform(&plane->tm, plane->coord, ft_vec3_new(0, 0, 0),
+		ft_vec3_new(99, 99, 1));
 	return (plane);
 }
 
@@ -72,15 +75,36 @@ t_sphere	*create_sphere(char **args)
 	if (out_range_color(sphere->color))
 		return (free(sphere), print_error_null("Error\n", RANGE_ERR));
 	sphere->color = ft_color_byte_to_per(sphere->color);
-	static int i = -1;
-	if (++i < 2)
-	{
-		sphere->color = ft_color_mult(sphere->color, 2);
-		sphere->mat = ft_mat_new(EMMISSIVE, sphere->color, ft_false_scatter);
-	}
-	//else if (i == 1 || i == 2)
-	//	sphere->mat = ft_mat_new(METAL, sphere->color, ft_metal_scatter);
-	else
-		sphere->mat = ft_mat_new(LAMBERTIAN, sphere->color, ft_lamb_scatter);
+	sphere->mat = ft_mat_new(ft_comp_diffuse_color);
+	if (!sphere->mat)
+		return (free(sphere), print_error_null("Error\n", MAT_ERR));
+	ft_gtf_set_transform(&sphere->tm, sphere->center, ft_vec3_new(0, 0, 0),
+		ft_vec3_new(sphere->radius, sphere->radius, sphere->radius));
 	return (sphere);
+}
+
+t_cone	*create_cone(char **args)
+{
+	t_cone	*cone;
+
+	cone = (t_cone *) malloc (sizeof(t_cone));
+	if (!cone)
+		return (print_error_null("Error\n", MALLOC_ERR));
+	cone->coord = parse_vector(args[0]);
+	cone->ori = parse_vector(args[1]);
+	if (out_range_norm(cone->ori))
+		return (free(cone), print_error_null("Error\n", RANGE_ERR));
+	cone->diam = ft_atof(args[2]);
+	cone->radius = cone->diam / 2;
+	cone->height = ft_atof(args[3]);
+	cone->color = parse_color(args[4]);
+	if (out_range_color(cone->color))
+		return (free(cone), print_error_null("Error\n", RANGE_ERR));
+	cone->color = ft_color_byte_to_per(cone->color);
+	cone->mat = ft_mat_new(ft_comp_diffuse_color);
+	if (!cone->mat)
+		return (free(cone), print_error_null("Error\n", MAT_ERR));
+	ft_gtf_set_transform(&cone->tm, cone->coord, ft_vec3_new(-1.6, 0, 0),
+		ft_vec3_new(cone->radius, cone->radius, cone->height));
+	return (cone);
 }

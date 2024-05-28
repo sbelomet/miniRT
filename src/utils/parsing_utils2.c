@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:34:31 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/04/26 10:50:45 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,8 @@ int	extract_type(char *arg)
 			return (SPHERE);
 		if (ft_equal_strs("cy", arg))
 			return (CYLINDER);
+		if (ft_equal_strs("co", arg))
+			return (CONE);
 	}
 	return (-1);
 }
@@ -79,7 +81,7 @@ bool	right_args(char **args, int type)
 	if ((type == CAMERA || type == LIGHT || type == PLANE || type == SPHERE)
 		&& i != 4)
 		return (false);
-	if (type == CYLINDER && i != 6)
+	if ((type == CYLINDER || type == CONE) && i != 6)
 		return (false);
 	return (true);
 }

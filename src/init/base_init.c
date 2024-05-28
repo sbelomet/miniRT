@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   base_init.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:47:15 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/16 09:37:45 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:02:08 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 
 void	set_base(t_base *base)
 {
-	base->select.id = -1;
-    base->select.type = -1;
-	base->select.type_add = -1;
-    base->select.modified = false;
-    base->select.translation = false;
 	base->alloc = NULL;
 	base->exit_code = 0;
 	base->mlx_ptr = NULL;
@@ -26,7 +21,7 @@ void	set_base(t_base *base)
 	base->first_object = NULL;
 	base->image.img_ptr = NULL;
 	base->image.img_data = NULL;
-	base->light = NULL;
+	base->first_light = NULL;
 	base->camera = NULL;
 	base->alight = NULL;
 	base->seed = (unsigned long)&base;

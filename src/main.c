@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/03/14 10:10:13 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/21 15:44:02 by sbelomet         ###   ########.fr       */
+/*   Created: 2024/05/08 11:38:22 by sbelomet          #+#    #+#             */
+/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	check_args(int argc, char **argv)
 
 int	main(const int argc, char **argv)
 {
-	t_base	base;
+	t_base		base;
 
 	if (!check_args(argc, argv))
 		return (EXIT_FAILURE);
@@ -35,10 +35,8 @@ int	main(const int argc, char **argv)
 		on_destroy(&base);
 	if (ft_base_init(&base) == 1)
 		on_destroy(&base);
-	ft_camera_init(&base);
-	//ft_render(&base);
-	ft_render2(&base);
+	ft_render(&base);
 	ft_hooks(&base);
-	on_destroy(&base);
-	return (EXIT_SUCCESS);
+	(void)argc;
+	(void)argv;
 }

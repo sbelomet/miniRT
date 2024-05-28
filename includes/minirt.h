@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/21 15:42:43 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/28 15:53:08 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,39 +23,32 @@
 # include <limits.h>
 
 /* Libraries External */
-# include "../minilibx/mlx.h"
+//# include <mlx.h>
+# include "../mlx/mlx.h"
 # include "../libft/includes/libft.h"
 
 /* Defines */
-
-/* Utils macros */
 # define WIN_WIDTH 1280
 # define WIN_HEIGHT 720
 # define SAMPLE_PPIXEL 40
-# define EPSILON 1e-6
+# define EPSILON 0.0001
 # define PIX_SAMPLE_SCALE 0.025
 # define MAX_DEPTH 10
 
 # define FWDFORM 1
 # define BCKFORM 0
 
-/* Key mapping macros */
-# define TAB_KEY 48
-# define ESC_KEY 53
-# define PLUS_KEY 69
-# define MINUS_KEY 78
-# define RENDER_KEY 76
-# define DE_SELECT_KEY 36
-
-/* Messages macros */
 # define TITLE "BetterBlender"
 # define MALLOC_ERR "Malloc error"
 # define EXT_ERR "Invalid extension file"
 # define BAD_ARGS "Bad number of arguments"
 # define MLX_ERR "MLX initialisation failure"
 # define IMG_ERR "Image initialisation failure"
+# define CAM_ERR "Camera initialisation failure"
+# define MAT_ERR "Material initialisation failure"
 # define FILE_ERR "Cannot open file with path: "
 # define WIN_ERR "Window initialisation failure"
+
 # define ISS_ERR "whitespace that is not a space detected"
 # define OBJNAME_ERR "Invalid object name while parsing file"
 # define REGEX_ERR "File contains some not allowed characters"
@@ -77,12 +70,6 @@ enum e_types
 	CONE,
 };
 
-enum e_type_add
-{
-	HEIGHT,
-	WIDTH,
-};
-
 enum e_materials
 {
 	LAMBERTIAN,
@@ -98,7 +85,6 @@ typedef struct s_vector3
 	double	x;
 	double	y;
 	double	z;
-	double	w;
 }			t_vector3;
 
 typedef struct s_vector4
@@ -108,6 +94,17 @@ typedef struct s_vector4
 	double	z;
 	double	w;
 }			t_vector4;
+
+typedef struct s_matrix
+{
+	double	m[4][4];
+}			t_matrix;
+
+typedef struct s_gtform
+{
+	t_matrix	fwdtfm;
+	t_matrix	bcktfm;
+}				t_gtform;
 
 typedef struct s_color
 {
@@ -144,14 +141,6 @@ typedef struct s_hit_rec
 	struct s_base		*base;
 }						t_hit_rec;
 
-typedef struct s_material
-{
-	double	reflect;
-	double	shine;
-	t_color	(*ft_comp_color)(t_objects *, t_hit_rec *, t_light *);
-}			t_material;
-
-
 typedef struct s_aabb
 {
 	t_inter	x;
@@ -169,17 +158,16 @@ typedef struct s_alight
 
 typedef struct s_camera
 {
-	double		focal_length;
-	double		viewport_width;
-	double		viewport_height;
+	double		horz_size;
+	double		aspect;
+	double		length;
 	t_vector3	lookfrom;
 	t_vector3	lookat;
 	t_vector3	vup;
-	t_vector3	ori;
-	double		vfov;
-	t_vector3	pixel00_loc;
-	t_vector3	pixel_delta_u;
-	t_vector3	pixel_delta_v;
+	t_vector3	alignment;
+	t_vector3	proj_screen_u;
+	t_vector3	proj_screen_v;
+	t_vector3	proj_screen_center;
 }				t_camera;
 
 typedef struct s_light
@@ -235,15 +223,6 @@ typedef struct s_cone
 
 /* Other structures */
 
-typedef	struct s_selected
-{
-	int		id;
-	int		type;
-	int		type_add; // HEIGHT OR WIDTH, ONLY FOR CYLINDER
-	bool	modified;
-	bool    translation;
-}				t_selected;
-
 typedef struct s_hittable
 {
 	void				*object;
@@ -258,6 +237,13 @@ typedef struct s_objects
 	int					(*ft_hit)(const void *, const t_ray, t_hit_rec *);
 	struct s_objects	*next;
 }					t_objects;
+
+typedef struct s_material
+{
+	double	reflect;
+	double	shine;
+	t_color	(*ft_comp_color)(t_objects *, t_hit_rec *, t_light *);
+}			t_material;
 
 typedef struct s_uniques
 {
@@ -283,59 +269,37 @@ typedef struct s_base
 	t_alloc			*alloc;
 	void			*mlx_ptr;
 	void			*win_ptr;
-	int				exit_code;
 	t_camera		*camera;
 	t_alight		*alight;
-	t_light			*light;
+	int				exit_code;
 	unsigned long	seed;
 	t_objects		*first_object;
 	t_light			*first_light;
-	t_selected		select;
 }					t_base;
 
-/* Alternative structures --------------- */
+/* Alternative structures */
 
 typedef struct s_hit
 {
 	double				t;
-	int                 id;
-	double				t_min;
 	t_vector3			point;
-	t_color             color;
+	t_color				color;
 	t_vector3			normal;
 }						t_hit;
 
-typedef struct s_qua_sol
-{
-	double		t1;
-	double		t2;
-	double		delta;
-}				t_qua_sol;
-
 typedef struct s_equation
 {
-	double		a;
-	double		b;
-	double		c;
-	double		t;
-	double		t1;
-	double		t2;
-	double		t3;
-	double		t4;
-	double		min_t;
+	double	a;
+	double	b;
+	double	c;
+	double  t;
+	double	t1;
+	double	t2;
+	double	t3;
+	double	t4;
+	double	min_t;
 	t_vector3	oc;
-}				t_equation;
-
-typedef struct s_matrix
-{
-	double	m[4][4];
-}			t_matrix;
-
-typedef struct s_gtform
-{
-	t_matrix	fwdtfm;
-	t_matrix	bcktfm;
-}				t_gtform;
+}	            t_equation;
 
 void    ft_render2(t_base *base);
 
@@ -363,17 +327,13 @@ t_objects	*get_last_object(t_objects *list);
 void		on_destroy(t_base *base);
 int			close_window(t_base *base);
 
-/* Hittable utils */
-t_hittable	*ft_hittable_new(void *object);
-t_hittable	*ft_hittable_last(t_hittable *hittable);
-void		ft_hittable_add(t_hittable **hittable, t_hittable *new);
-
 /* ---------------- */
 
 /* Init */
 void		set_base(t_base *base);
 int			ft_base_init(t_base *base);
-void		ft_camera_init(t_base *base);
+t_camera	*ft_cam_new(void);
+void		ft_update_cam(t_camera *cam);
 
 /* Errors */
 void		*print_error_null(char *error, char *var);
@@ -389,6 +349,7 @@ int			file_parse(t_base *base, char *filepath);
 t_plane		*create_plane(char **args);
 t_sphere	*create_sphere(char **args);
 t_cylin		*create_cylinder(char **args);
+t_cone		*create_cone(char **args);
 
 /* Creating uniques */
 t_light		*create_light(char **args);
@@ -402,7 +363,6 @@ bool		default_uniques(t_base *base);
 
 /***   HOOKS  ***/
 void		ft_hooks(t_base *base);
-bool		select_object(t_base *base, int x, int y);
 
 /* ---------------- */
 
@@ -411,6 +371,7 @@ t_color		ft_color_new(const double a, const double r,
 				const double g, const double b);
 int			ft_get_color_int(t_color color);
 t_color		ft_color_byte_to_per(const t_color color);
+void		ft_color_print(const t_color c, const char *name);
 t_color		ft_color_add(t_color c1, const t_color c2);
 t_color		ft_color_sub(t_color c1, const t_color c2);
 t_color		ft_color_mult(t_color c, const double value);
@@ -431,19 +392,14 @@ int			ft_close_enough(const double f1, const double f2);
 
 /* Hittable Utils */
 void		ft_set_hit_func(t_objects *new_object, int type);
-int			ft_hit_anything(t_objects *list, const t_ray r,
-				const t_inter ray_t, t_hit_rec *rec);
-int			ft_hit_sphere(const void *sphere_obj, const t_ray r,
-				const t_inter ray_t, t_hit_rec *rec);
-int			ft_hit_plane(const void *plane_obj, const t_ray r,
-				const t_inter ray_t, t_hit_rec *rec);
-int			ft_hit_cylinder(const void *cylinder_obj, const t_ray r,
-				const t_inter ray_t, t_hit_rec *rec);
 int			ft_anything_hit(t_objects *list, const t_ray r, t_hit_rec *rec);
 int			ft_sphere_hit(const void *sphere_obj, const t_ray r, t_hit_rec *rec);
 int			ft_plane_hit(const void *plane_obj, const t_ray r, t_hit_rec *rec);
 int			ft_cylinder_hit(const void *cylinder_obj, const t_ray r, t_hit_rec *rec);
 int			ft_cone_hit(const void *cone_obj, const t_ray r, t_hit_rec *rec);
+t_objects	*ft_object_new(void *object, int type);
+t_objects	*ft_object_last(t_objects *hittable);
+void		ft_object_add(t_objects **hittable, t_objects *new);
 
 /* Vector3 Utils */
 t_vector3	ft_vec3_new(const double x, const double y, const double z);
@@ -496,7 +452,9 @@ t_vector3	ft_gtf_apply_vec3(const t_gtform gt, const t_vector3 v,
 			const int dir_flag);
 
 /* Ray Utils */
-t_ray		ft_ray_new(const t_vector3 origin, const t_vector3 dir);
+t_ray		ft_ray_new(const t_vector3 p1, const t_vector3 p2);
+int			ft_generate_ray(t_camera cam, float proj_screen_x,
+			float proj_screen_y, t_ray *camera_ray);
 t_vector3	ft_ray_at(const t_ray ray, const double t);
 t_ray		ft_ray_calculate(t_base *base, int i, int j);
 t_color		ft_ray_color(t_base *base, t_ray r, int depth, t_objects *world);
@@ -510,8 +468,8 @@ double		ft_inter_clamp(const t_inter inter, const double x);
 t_inter		ft_inter_expand(const t_inter inter, const double delta);
 
 /* Material Utils */
-t_material	*ft_mat_new(int type, t_color albedo, int (*ft_scatter)
-				(const t_ray, const t_hit_rec, t_color *, t_ray *));
+t_material	*ft_mat_new(t_color (*ft_comp_color)(t_objects *, t_hit_rec *, t_light *));
+t_color		ft_comp_diffuse_color(t_objects *list, t_hit_rec *rec, t_light *lights);
 t_vector3	ft_reflect(const t_vector3 v, const t_vector3 n);
 t_vector3	ft_refract(const t_vector3 uv,
 				const t_vector3 n, double etai_over_etat);
@@ -532,5 +490,10 @@ t_aabb		ft_aabb_new(const t_inter x, const t_inter y, const t_inter z);
 t_aabb		ft_aabb_new2(const t_vector3 a, const t_vector3 b);
 t_aabb		ft_aabb_new3(const t_aabb box0, const t_aabb box1);
 int			ft_aabb_hit(const t_aabb aabb, const t_ray r, t_inter ray_t);
+
+/* Light Utils */
+void		ft_light_add(t_light **light, t_light *new);
+t_light		*ft_light_new(t_vector3 coord, t_color	color, double intensity);
+int			ft_calc_lights(t_objects *list, t_hit_rec *rec, t_light *lights);
 
 #endif

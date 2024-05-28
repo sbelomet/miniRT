@@ -6,12 +6,12 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 11:15:50 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/23 11:29:02 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
+/* 
 t_vector3	ft_vec3_rand(t_base *base)
 {
 	return (ft_vec3_new(ft_rand_double(base), ft_rand_double(base),
@@ -50,4 +50,4 @@ t_vector3	ft_vec3_rand_hemis(t_base *base, const t_vector3 normal)
 	if (ft_vec3_dot(on_unit_sphere, normal) > 0.0)
 		return (on_unit_sphere);
 	return (ft_vec3_mult(on_unit_sphere, -1));
-}
+} */

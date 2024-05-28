@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   light_list_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: scherty <scherty@student.42.fr>            +#+  +:+       +#+        */
+/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 20:01:50 by scherty           #+#    #+#             */
-/*   Updated: 2024/05/09 20:07:53 by scherty          ###   ########.fr       */
+/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "sbrt.h"
+#include "minirt.h"
 
 t_light	*ft_light_new(t_vector3 coord, t_color	color, double intensity)
 {

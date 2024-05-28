@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defaults.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 11:49:22 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/09 14:20:00 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 
 static t_camera	*default_camera(void)
 {
-	t_camera	*camera;
+	t_camera	*cam;
 
-	camera = (t_camera *)malloc(sizeof(t_camera));
-	if (!camera)
+	cam = (t_camera *)malloc(sizeof(t_camera));
+	if (!cam)
 		return (print_error_null("Error\n", MALLOC_ERR));
-	camera->lookfrom = ft_vec3_new(0, 0, 0);
-	camera->lookat = ft_vec3_new(0, 0, 0);
-	camera->vfov = 90.0;
-	return (camera);
+	cam->lookfrom = ft_vec3_new(0, -10, -1);
+	cam->lookat = ft_vec3_new(0, 0, 0);
+	cam->vup = ft_vec3_new(0, 0, 1);
+	cam->length = 2;
+	cam->horz_size = .25;
+	cam->aspect = 16.0 / 9.0;
+	ft_update_cam(cam);
+	return (cam);
 }
 
 static t_alight	*default_amblight(void)
@@ -38,19 +42,20 @@ static t_alight	*default_amblight(void)
 	return (amblight);
 }
 
-/*static t_light	*default_light(void)
+/* static t_light	*default_light(void)
 {
 	t_light		*light;
 
 	light = (t_light *) malloc (sizeof(t_light));
 	if (!light)
 		return (print_error_null("Error\n", MALLOC_ERR));
-	light->coord = ft_vec3_new(-40, 0, -20);
+	light->coord = ft_vec3_new(0, -10, -2);
 	light->ratio = 0.5;
 	light->color = ft_color_new(0, 125.0, 125.0, 125.0);
 	light->color = ft_color_byte_to_per(light->color);
+	light->next = NULL;
 	return (light);
-}*/
+} */
 
 bool	default_uniques(t_base *base)
 {
@@ -66,11 +71,11 @@ bool	default_uniques(t_base *base)
 		if (base->alight == NULL)
 			return (false);
 	}
-	//if (base->light == NULL)
-	//{
-	//	base->light = default_light();
-	//	if (base->light == NULL)
-	//		return (false);
-	//}
+/* 	if (base->first_light == NULL)
+	{
+		base->first_light = default_light();
+		if (base->first_light == NULL)
+			return (false);
+	} */
 	return (true);
 }

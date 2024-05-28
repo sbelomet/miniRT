@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 10:21:25 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/04/30 11:28:07 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/28 12:59:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,10 @@ t_color	ft_color_byte_to_per(const t_color color)
 	new_c.green = color.green / 256;
 	new_c.blue = color.blue / 256;
 	return (new_c);
+}
+
+void	ft_color_print(const t_color c, const char *name)
+{
+	printf("Color %s(a:%f, r:%f, g:%f, b:%f)\n", name,
+		c.alpha, c.red, c.green, c.blue);
 }

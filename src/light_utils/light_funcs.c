@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 15:15:10 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/21 15:08:47 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,8 @@ int	ft_calc_lights(t_objects *list, t_hit_rec *rec, t_light *lights)
 		if (ft_compute_light(list, &tmp_rec, tmp_light))
 		{
 			light_good = true;
-			rec->emmited = ft_color_add(rec->emmited, ft_color_mult(tmp_rec.emmited, tmp_rec.intensity));
+			rec->emmited = ft_color_add(rec->emmited,
+					ft_color_mult(tmp_rec.emmited, tmp_rec.intensity));
 			rec->intensity = tmp_rec.intensity;
 		}
 		tmp_light = tmp_light->next;

@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 12:48:17 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/21 15:24:15 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,3 +29,5 @@ t_gtform	ft_gtf_new2(const t_matrix fwd, const t_matrix bck)
 	gt.bcktfm = bck;
 	return (gt);
 }
+
+// t_gtform	ft_gtf_new_(const void)

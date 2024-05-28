@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_parse.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:20:25 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/07 11:57:34 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,14 @@ static void	*create_object(char **args, int id)
 		return (create_plane(args));
 	if (id == CYLINDER)
 		return (create_cylinder(args));
+	if (id == CONE)
+		return (create_cone(args));
 	return (NULL);
 }
 
 static bool	add_token(t_base *base, int type, char **args)
 {
 	t_objects	*new_object;
-	t_objects	*last_object;
 
 	new_object = (t_objects *) malloc(sizeof(t_objects));
 	if (!new_object)
@@ -35,17 +36,10 @@ static bool	add_token(t_base *base, int type, char **args)
 	new_object->next = NULL;
 	new_object->type = type;
 	new_object->object = create_object(args, type);
-	ft_set_hit_func(new_object, type);
 	if (new_object->object == NULL)
 		return (free(new_object), false);
-	if (base->first_object == NULL)
-		base->first_object = new_object;
-	else
-	{
-		last_object = get_last_object(base->first_object);
-		new_object->id = last_object->id + 1;
-		last_object->next = new_object;
-	}
+	ft_set_hit_func(new_object, type);
+	ft_object_add(&base->first_object, new_object);
 	return (true);
 }
 
@@ -65,10 +59,10 @@ static int	check_create_unique(t_base *base, char **args, int type)
 			return (print_error("Error\n", CREATE_ERR, 1));
 		return (0);
 	}
-	if (type == LIGHT && base->light == NULL)
+	if (type == LIGHT)
 	{
-		base->light = create_light(args);
-		if (!base->light)
+		base->first_light = create_light(args);
+		if (!base->first_light)
 			return (print_error("Error\n", CREATE_ERR, 1));
 		return (0);
 	}
@@ -123,7 +117,7 @@ int	file_parse(t_base *base, char *filepath)
 		line = get_next_line(infile);
 	}
 	close(infile);
-    if (!default_uniques(base))
-        return (set_exit_code(base, 1, 1));
+	if (!default_uniques(base))
+		return (set_exit_code(base, 1, 1));
 	return (EXIT_SUCCESS);
 }

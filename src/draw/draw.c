@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:08:51 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/21 15:39:36 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/28 13:00:06 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	ft_render(t_base *base)
 	t_ray		r;
 	t_hit_rec	rec;
 
+	rec.base = base;
 	fact_xy[0] = 1.0 / ((double)WIN_WIDTH / 2.0);
 	fact_xy[1] = 1.0 / ((double)WIN_HEIGHT / 2.0);
 	r = ft_ray_new(ft_vec3_new(0, 0, 0), ft_vec3_new(0, 0, 0));
@@ -35,8 +36,7 @@ void	ft_render(t_base *base)
 	while (++index[1] < WIN_HEIGHT)
 	{
 		index[0] = -1;
-		printf("Scanlines remaining: %d\n", WIN_HEIGHT - index[1]);
-		printf("\033[1A\033[2K");
+		printf("Scanlines remaining: %d\n\033[1A\033[2K", WIN_HEIGHT - index[1]);
 		while (++index[0] < WIN_WIDTH)
 		{
 			ft_generate_ray(*base->camera, ((double)index[0] * fact_xy[0]) - 1.0, ((double)index[1] * fact_xy[1]) - 1.0, &r);

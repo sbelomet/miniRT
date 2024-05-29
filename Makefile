@@ -6,7 +6,7 @@
 #    By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/14 10:06:00 by lgosselk          #+#    #+#              #
-#    Updated: 2024/05/28 13:04:52 by sbelomet         ###   ########.fr        #
+#    Updated: 2024/05/29 15:41:27 by sbelomet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,7 +63,7 @@ F_MATER_UITLS	=	material mat_funcs
 F_INTRV_UTILS	=	intervals intervals_ops
 F_LIGHT_UTILS	=	light_funcs light_list_utils
 F_GTFM			=	gtform gtfm_transforms gtform_ops
-F_MTRX_UTILS	=	matrices matrices_ops matrices_inverse matrices_deter
+F_MTRX_UTILS	=	matrices matrices_ops matrices_inverse
 
 FILES		=	$(addprefix $(INIT_DIR), $(F_INIT)) \
 				$(addprefix $(ERRORS_DIR), $(F_ERRORS)) \

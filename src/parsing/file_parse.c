@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:20:25 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/29 10:11:38 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,7 @@ static int	check_create_unique(t_base *base, char **args, int type)
 	}
 	if (type == LIGHT)
 	{
-		base->first_light = create_light(args);
-		if (!base->first_light)
+		if (!add_light(base, args))
 			return (print_error("Error\n", CREATE_ERR, 1));
 		return (0);
 	}
@@ -74,7 +73,7 @@ static int	line_parse(t_base *base, char *line)
 	int		type;
 	char	**args;
 
-	if (!line || *line == '\0')
+	if (!line || *line == '\0' || *line == '#')
 		return (0);
 	if (!line_regex(line))
 		return (print_error("Error\n", REGEX_ERR, 1));

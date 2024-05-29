@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:08:42 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/29 10:17:41 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,17 @@ t_light	*create_light(char **args)
 		return (free(light), print_error_null("Error\n", RANGE_ERR));
 	light->next = NULL;
 	return (light);
+}
+
+bool	add_light(t_base *base, char **args)
+{
+	t_light	*light;
+
+	light = create_light(args);
+	if (!light)
+		return (free(light), false);
+	ft_light_add(&base->first_light, light);
+	return (true);
 }
 
 t_camera	*create_camera(char **args)

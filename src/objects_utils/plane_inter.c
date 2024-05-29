@@ -6,11 +6,24 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 13:34:04 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/29 14:32:04 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
+
+static void	ft_rec_setup(t_hit_rec *rec, const t_vector3 kxt,
+	const t_ray bck_r, const t_plane *pl)
+{
+	rec->p = ft_vec3_add(bck_r.p1, kxt);
+	rec->p = ft_gtf_apply_vec3(pl->tm, rec->p, FWDFORM);
+	rec->normal = ft_vec3_unit(ft_vec3_sub(ft_gtf_apply_vec3(pl->tm,
+					ft_vec3_new(0, 0, -1), FWDFORM),
+				ft_gtf_apply_vec3(pl->tm, ft_vec3_new(0, 0, 0),
+					FWDFORM)));
+	rec->color = pl->color;
+	rec->mat = pl->mat;
+}
 
 int	ft_plane_hit(const void *plane_obj, const t_ray r, t_hit_rec *rec)
 {
@@ -32,14 +45,7 @@ int	ft_plane_hit(const void *plane_obj, const t_ray r, t_hit_rec *rec)
 			uv[1] = bck_r.p1.y + (k.y * t);
 			if ((fabs(uv[0]) < 1) && (fabs(uv[1]) < 1))
 			{
-				rec->p = ft_vec3_add(bck_r.p1, ft_vec3_mult(k, t));
-				rec->p = ft_gtf_apply_vec3(pl->tm, rec->p, FWDFORM);
-				rec->normal = ft_vec3_unit(ft_vec3_sub(ft_gtf_apply_vec3(pl->tm,
-								ft_vec3_new(0, 0, -1), FWDFORM),
-							ft_gtf_apply_vec3(pl->tm, ft_vec3_new(0, 0, 0),
-								FWDFORM)));
-				rec->color = pl->color;
-				rec->mat = pl->mat;
+				ft_rec_setup(rec, ft_vec3_mult(k, t), bck_r, pl);
 				return (true);
 			}
 		}

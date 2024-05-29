@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:05:07 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/29 10:54:27 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ t_cone	*create_cone(char **args)
 	cone->mat = ft_mat_new(ft_comp_diffuse_color);
 	if (!cone->mat)
 		return (free(cone), print_error_null("Error\n", MAT_ERR));
-	ft_gtf_set_transform(&cone->tm, cone->coord, ft_vec3_new(-1.6, 0, 0),
+	ft_gtf_set_transform(&cone->tm, cone->coord, ft_vec3_new(0, 0, 0),
 		ft_vec3_new(cone->radius, cone->radius, cone->height));
 	return (cone);
 }

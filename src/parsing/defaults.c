@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 11:49:22 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/29 11:57:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,11 @@ bool	default_uniques(t_base *base)
 		if (base->alight == NULL)
 			return (false);
 	}
+	return (true);
+}
 /* 	if (base->first_light == NULL)
 	{
 		base->first_light = default_light();
 		if (base->first_light == NULL)
 			return (false);
 	} */
-	return (true);
-}

@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 15:15:10 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/29 11:55:36 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,13 @@ int	ft_compute_shadow(t_objects *list, t_objects *current,
 	return (shadow_good);
 }
 
+static int	ft_return_dark(t_hit_rec *rec, t_light *l)
+{
+	rec->emmited = l->color;
+	rec->intensity = 0.0;
+	return (false);
+}
+
 int	ft_compute_light(t_objects *list, t_hit_rec *rec, t_light *l)
 {
 	t_vector3	light_dir;
@@ -57,11 +64,7 @@ int	ft_compute_light(t_objects *list, t_hit_rec *rec, t_light *l)
 	{
 		angle = acos(ft_vec3_dot(rec->normal, light_dir));
 		if (angle > 1.5708)
-		{
-			rec->emmited = l->color;
-			rec->intensity = 0.0;
-			return (false);
-		}
+			return (ft_return_dark(rec, l));
 		else
 		{
 			rec->emmited = l->color;
@@ -70,11 +73,7 @@ int	ft_compute_light(t_objects *list, t_hit_rec *rec, t_light *l)
 		}
 	}
 	else
-	{
-		rec->emmited = l->color;
-		rec->intensity = 0.0;
-		return (false);
-	}
+		return (ft_return_dark(rec, l));
 }
 
 int	ft_calc_lights(t_objects *list, t_hit_rec *rec, t_light *lights)

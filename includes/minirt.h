@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/29 14:53:06 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/30 15:55:05 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ typedef struct s_hit_rec
 	t_color				color;
 	double				intensity;
 	struct s_base		*base;
+	t_vector3			eyev;
 }						t_hit_rec;
 
 typedef struct s_aabb
@@ -154,6 +155,7 @@ typedef struct s_alight
 {
 	double	ratio;
 	t_color	color;
+	t_color	intensity;
 }				t_alight;
 
 typedef struct s_camera
@@ -175,6 +177,7 @@ typedef struct s_light
 	t_vector3		coord;
 	double			ratio;
 	t_color			color;
+	t_color			intensity;
 	struct s_light	*next;
 }					t_light;
 
@@ -242,9 +245,19 @@ typedef struct s_material
 {
 	double	reflect;
 	double	shine;
+	double	spec;
 	void	(*ft_comp_color)(t_objects *, t_hit_rec *,
 			t_light *, t_color *);
 }			t_material;
+
+typedef struct s_exposure
+{
+	t_vector3	lightv;
+	t_vector3	reflectv;
+	double		light_dot_normal;
+	double		reflect_dot_eye;
+	double		factor;
+}	t_exposure;
 
 typedef struct s_uniques
 {
@@ -305,7 +318,7 @@ typedef struct s_equation
 typedef struct s_poi
 {
 	t_vector3	poi[4];
-	double		t_valids[4];
+	int			tv[4];
 	int			index;
 }				t_poi;
 
@@ -354,10 +367,10 @@ int			set_exit_code(t_base *base, int exit_code, int return_val);
 int			file_parse(t_base *base, char *filepath);
 
 /* Creating objects */
-t_plane		*create_plane(char **args);
-t_sphere	*create_sphere(char **args);
-t_cylin		*create_cylinder(char **args);
-t_cone		*create_cone(char **args);
+t_plane		*create_plane(t_base *base, char **args);
+t_sphere	*create_sphere(t_base *base, char **args);
+t_cylin		*create_cylinder(t_base *base, char **args);
+t_cone		*create_cone(t_base *base, char **args);
 
 /* Creating uniques */
 t_light		*create_light(char **args);
@@ -400,7 +413,6 @@ void		ft_swap(double *a, double *b);
 int			ft_close_enough(const double f1, const double f2);
 
 /* Hittable Utils */
-void		ft_set_hit_func(t_objects *new_object, int type);
 int			ft_anything_hit(t_objects *list, const t_ray r, t_hit_rec *rec);
 int			ft_sphere_hit(const void *sphere_obj,
 				const t_ray r, t_hit_rec *rec);
@@ -408,8 +420,12 @@ int			ft_plane_hit(const void *plane_obj, const t_ray r, t_hit_rec *rec);
 int			ft_cylinder_hit(const void *cylinder_obj,
 				const t_ray r, t_hit_rec *rec);
 int			ft_cone_hit(const void *cone_obj, const t_ray r, t_hit_rec *rec);
-t_objects	*ft_object_new(void *object, int type);
-t_objects	*ft_object_last(t_objects *hittable);
+int			ft_smallest_t(t_equation quad);
+void		ft_no_hit(int *t_val_a, int *t_val_b, double *t_a, double *t_b);
+void		ft_setup_equa_cylin(const t_ray bck_r,
+				t_vector3 *v, t_equation *quad);
+void		ft_setup_equa_cone(const t_ray bck_r,
+				t_vector3 *v, t_equation *quad);
 void		ft_object_add(t_objects **hittable, t_objects *new);
 
 /* Vector3 Utils */
@@ -436,6 +452,7 @@ t_vector3	ft_vec3_rand_unit(t_base *base);
 t_vector3	ft_vec3_rand_hemis(t_base *base, const t_vector3 normal);
 int			ft_vec3_grtr(const t_vector3 v1, const t_vector3 v2);
 int			ft_vec3_lssr(const t_vector3 v1, const t_vector3 v2);
+t_vector3	ft_vec3_negate(t_vector3 vec);
 
 /* Vector4 Utils */
 t_vector4	ft_vec4_new(const double x, const double y, const double z,
@@ -454,10 +471,14 @@ t_matrix	ft_mtrx_inverse(const t_matrix m);
 
 /* Geometric Transforms Utils */
 t_gtform	ft_gtf_new(void);
+t_matrix	rotation_z(double rad);
+t_matrix	rotation_x(double rad);
+t_matrix	rotation_y(double rad);
+t_matrix	rotation_matrix(t_vector3 normal);
 t_gtform	ft_gtf_new2(const t_matrix fwd, const t_matrix bck);
 t_gtform	ft_gtf_mult(const t_gtform g1, const t_gtform g2);
 void		ft_gtf_set_transform(t_gtform *gt, const t_vector3 trans,
-				const t_vector3 rot, const t_vector3 scale);
+				const t_matrix rot_mtrx, const t_vector3 scale);
 t_ray		ft_gtf_apply_ray(const t_gtform gt,
 				const t_ray r, const int dir_flag);
 t_vector3	ft_gtf_apply_vec3(const t_gtform gt, const t_vector3 v,
@@ -465,8 +486,8 @@ t_vector3	ft_gtf_apply_vec3(const t_gtform gt, const t_vector3 v,
 
 /* Ray Utils */
 t_ray		ft_ray_new(const t_vector3 p1, const t_vector3 p2);
-int			ft_generate_ray(t_camera cam, float proj_screen_x,
-				float proj_screen_y, t_ray *camera_ray);
+int			ft_generate_ray(t_camera cam, double x,
+				double y, t_ray *camera_ray);
 t_vector3	ft_ray_at(const t_ray ray, const double t);
 t_ray		ft_ray_calculate(t_base *base, int i, int j);
 t_color		ft_ray_color(t_base *base, t_ray r, int depth, t_objects *world);
@@ -480,7 +501,7 @@ double		ft_inter_clamp(const t_inter inter, const double x);
 t_inter		ft_inter_expand(const t_inter inter, const double delta);
 
 /* Material Utils */
-t_material	*ft_mat_new(void (*ft_comp_color)
+t_material	*ft_mat_new(t_base *base, void (*ft_comp_color)
 				(t_objects *, t_hit_rec *, t_light *, t_color *));
 void		ft_comp_diffuse_color(t_objects *list, t_hit_rec *rec,
 				t_light *lights, t_color *result);
@@ -506,7 +527,10 @@ t_aabb		ft_aabb_new3(const t_aabb box0, const t_aabb box1);
 int			ft_aabb_hit(const t_aabb aabb, const t_ray r, t_inter ray_t);
 
 /* Light Utils */
+t_vector3	reflect(t_vector3 in, t_vector3 normal);
 void		ft_light_add(t_light **light, t_light *new);
+bool		ft_dark_spec(t_exposure *exp, t_hit_rec rec, t_light *light);
+t_color		ft_add_specular(t_light *light, t_hit_rec rec, t_exposure exp);
 t_light		*ft_light_new(t_vector3 coord, t_color	color, double intensity);
 int			ft_calc_lights(t_objects *list, t_hit_rec *rec, t_light *lights);
 

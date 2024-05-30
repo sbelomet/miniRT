@@ -3,23 +3,24 @@
 /*                                                        :::      ::::::::   */
 /*   intersections_funcs.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 11:11:35 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/29 14:04:27 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/30 11:08:30 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
 static void	ft_rec_setup(t_hit_rec *rec, t_objects *object,
-	const t_hit_rec tmp_rec)
+	const t_hit_rec tmp_rec, const t_ray r)
 {
 	rec->object = object;
 	rec->p = tmp_rec.p;
 	rec->normal = tmp_rec.normal;
 	rec->color = tmp_rec.color;
 	rec->mat = tmp_rec.mat;
+	rec->eyev = ft_vec3_negate(ft_vec3_unit(r.lab));
 }
 
 int	ft_anything_hit(t_objects *list, const t_ray r, t_hit_rec *rec)
@@ -40,7 +41,7 @@ int	ft_anything_hit(t_objects *list, const t_ray r, t_hit_rec *rec)
 			{
 				min_dist = ft_vec3_len_squared(ft_vec3_sub(tmp_rec.p, r.p1));
 				hit_anything = true;
-				ft_rec_setup(rec, tmp_list, tmp_rec);
+				ft_rec_setup(rec, tmp_list, tmp_rec, r);
 			}
 		}
 		tmp_list = tmp_list->next;

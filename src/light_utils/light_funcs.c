@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 15:15:10 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/29 11:55:36 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/30 15:55:32 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ int	ft_compute_light(t_objects *list, t_hit_rec *rec, t_light *l)
 	light_ray = ft_ray_new(start_point, ft_vec3_add(start_point, light_dir));
 	if (!ft_compute_shadow(list, rec->object, &light_rec, light_ray))
 	{
+		if (ft_vec3_dot(rec->normal, light_dir) < 0)
+			rec->normal = ft_vec3_mult(rec->normal, -1);
 		angle = acos(ft_vec3_dot(rec->normal, light_dir));
 		if (angle > 1.5708)
 			return (ft_return_dark(rec, l));
@@ -72,30 +74,33 @@ int	ft_compute_light(t_objects *list, t_hit_rec *rec, t_light *l)
 			return (true);
 		}
 	}
-	else
 		return (ft_return_dark(rec, l));
 }
 
 int	ft_calc_lights(t_objects *list, t_hit_rec *rec, t_light *lights)
 {
-	t_light		*tmp_light;
+	t_exposure	exp;
 	t_hit_rec	tmp_rec;
 	int			light_good;
 
-	tmp_light = lights;
 	light_good = false;
 	rec->emmited = ft_color_new(0, 0, 0, 0);
 	tmp_rec = *rec;
-	while (tmp_light)
+	while (lights)
 	{
-		if (ft_compute_light(list, &tmp_rec, tmp_light))
+		if (ft_compute_light(list, &tmp_rec, lights))
 		{
 			light_good = true;
 			rec->emmited = ft_color_add(rec->emmited,
 					ft_color_mult(tmp_rec.emmited, tmp_rec.intensity));
+			if (ft_dark_spec(&exp, tmp_rec, lights))
+				ft_return_dark(&tmp_rec, lights);
+			else
+				rec->emmited = ft_color_add(rec->emmited,
+					ft_add_specular(lights, tmp_rec, exp));
 			rec->intensity = tmp_rec.intensity;
 		}
-		tmp_light = tmp_light->next;
+		lights = lights->next;
 	}
 	return (light_good);
 }

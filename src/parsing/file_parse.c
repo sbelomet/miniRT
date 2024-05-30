@@ -6,22 +6,22 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:20:25 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/29 10:11:38 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/30 14:45:14 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-static void	*create_object(char **args, int id)
+static void	*create_object(t_base *base, char **args, int type)
 {
-	if (id == SPHERE)
-		return (create_sphere(args));
-	if (id == PLANE)
-		return (create_plane(args));
-	if (id == CYLINDER)
-		return (create_cylinder(args));
-	if (id == CONE)
-		return (create_cone(args));
+	if (type == SPHERE)
+		return (create_sphere(base, args));
+	if (type == PLANE)
+		return (create_plane(base, args));
+	if (type == CYLINDER)
+		return (create_cylinder(base, args));
+	if (type == CONE)
+		return (create_cone(base, args));
 	return (NULL);
 }
 
@@ -29,16 +29,22 @@ static bool	add_token(t_base *base, int type, char **args)
 {
 	t_objects	*new_object;
 
-	new_object = (t_objects *) malloc(sizeof(t_objects));
+	new_object = (t_objects *)malloc(sizeof(t_objects));
 	if (!new_object)
 		return (false);
-	new_object->id = 0;
 	new_object->next = NULL;
 	new_object->type = type;
-	new_object->object = create_object(args, type);
+	new_object->object = create_object(base, args, type);
 	if (new_object->object == NULL)
 		return (free(new_object), false);
-	ft_set_hit_func(new_object, type);
+	if (type == SPHERE)
+		new_object->ft_hit = ft_sphere_hit;
+	else if (type == PLANE)
+		new_object->ft_hit = ft_plane_hit;
+	else if (type == CYLINDER)
+		new_object->ft_hit = ft_cylinder_hit;
+	else if (type == CONE)
+		new_object->ft_hit = ft_cone_hit;
 	ft_object_add(&base->first_object, new_object);
 	return (true);
 }

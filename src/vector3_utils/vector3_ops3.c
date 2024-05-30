@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   obj_list_utils.c                                   :+:      :+:    :+:   */
+/*   vector3_ops3.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/05/09 14:24:54 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/30 09:57:44 by sbelomet         ###   ########.fr       */
+/*   Created: 2024/05/30 09:49:38 by lgosselk          #+#    #+#             */
+/*   Updated: 2024/05/30 09:52:19 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-void	ft_object_add(t_objects **hittable, t_objects *new)
+t_vector3	ft_vec3_negate(t_vector3 vec)
 {
-	t_objects	*last;
-
-	if (!*hittable)
-	{
-		*hittable = new;
-		return ;
-	}
-	last = get_last_object(*hittable);
-	new->id = last->id;
-	last->next = new;
+	return ((t_vector3){
+		vec.x * -1,
+		vec.y * -1,
+		vec.z * -1
+	});
 }

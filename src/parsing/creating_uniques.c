@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:08:42 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/29 10:17:41 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/30 12:38:17 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ t_light	*create_light(char **args)
 	light->color = parse_color(args[2]);
 	if (out_range_color(light->color))
 		return (free(light), print_error_null("Error\n", RANGE_ERR));
+	light->intensity = ft_color_mult(light->color, light->ratio);
 	light->next = NULL;
 	return (light);
 }
@@ -78,5 +79,6 @@ t_alight	*create_amblight(char **args)
 	if (out_range_color(amblight->color))
 		return (free(amblight), print_error_null("Error\n", RANGE_ERR));
 	amblight->color = ft_color_byte_to_per(amblight->color);
+	amblight->intensity = ft_color_mult(amblight->color, amblight->ratio);
 	return (amblight);
 }

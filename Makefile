@@ -6,7 +6,7 @@
 #    By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/14 10:06:00 by lgosselk          #+#    #+#              #
-#    Updated: 2024/05/29 15:41:27 by sbelomet         ###   ########.fr        #
+#    Updated: 2024/05/30 15:54:54 by sbelomet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,14 +55,14 @@ F_COLOR			=	color color_ops1
 F_DRAW			=	draw
 F_HOOKS			=	handle_hooks
 F_MATH_UTILS	=	rng angles swap close_enough
-F_VEC3_UTILS	=	vector3 vector3_ops1 vector3_ops2 vector3_rand vector3_comp
+F_VEC3_UTILS	=	vector3 vector3_ops1 vector3_ops2 vector3_rand vector3_comp vector3_ops3
 F_VEC4_UTILS	=	vector4 vector4_ops
 F_RAY_UTILS		=	ray
-F_OBJ_UTILS		=	intersections_funcs obj_list_utils plane_inter sphere_inter cylinder_inter cone_inter
+F_OBJ_UTILS		=	intersections_funcs obj_list_utils plane_inter sphere_inter cylinder_inter cone_inter cylinder_utils
 F_MATER_UITLS	=	material mat_funcs
 F_INTRV_UTILS	=	intervals intervals_ops
-F_LIGHT_UTILS	=	light_funcs light_list_utils
-F_GTFM			=	gtform gtfm_transforms gtform_ops
+F_LIGHT_UTILS	=	light_funcs light_list_utils light_funcs2
+F_GTFM			=	gtform gtfm_transforms gtform_ops gtfm_rotation
 F_MTRX_UTILS	=	matrices matrices_ops matrices_inverse
 
 FILES		=	$(addprefix $(INIT_DIR), $(F_INIT)) \
@@ -83,9 +83,9 @@ FILES		=	$(addprefix $(INIT_DIR), $(F_INIT)) \
 				$(addprefix $(GTFM_DIR), $(F_GTFM)) \
 				$(addprefix $(MTRX_UTILS_DIR), $(F_MTRX_UTILS)) \
 
-
 SRCS		=	src/main.c \
 				$(addprefix $(SRCS_DIR), $(addsuffix .c, $(FILES))) \
+				
 				
 
 OBJS		=	objs/main.o \

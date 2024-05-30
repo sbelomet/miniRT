@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/19 12:42:15 by scherty           #+#    #+#             */
-/*   Updated: 2024/05/29 11:56:47 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/30 09:58:13 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,3 @@ void	ft_comp_diffuse_color(t_objects *list, t_hit_rec *rec, t_light *lights,
 				rec->base->alight->color, rec->base->alight->ratio));
 	*result = ft_color_mult_color(rec->emmited, rec->color);
 }
-
-/* 
-t_color	ft_comp_spec_color(t_objects *list, t_hit_rec *rec, t_light *lights)
-{
-	t_color	spec;
-
-	spec = ft_color_new(0, 0, 0, 0);
-	
-} */

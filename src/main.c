@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:38:22 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/29 11:34:23 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/30 12:00:35 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,5 @@ int	main(const int argc, char **argv)
 		on_destroy(&base);
 	ft_render(&base);
 	ft_hooks(&base);
-	(void)argc;
-	(void)argv;
+	return (EXIT_SUCCESS);
 }

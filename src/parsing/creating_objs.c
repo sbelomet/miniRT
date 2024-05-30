@@ -6,13 +6,13 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:05:07 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/29 10:54:27 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/30 14:45:58 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-t_cylin	*create_cylinder(char **args)
+t_cylin	*create_cylinder(t_base *base, char **args)
 {
 	t_cylin	*cylinder;
 
@@ -30,15 +30,16 @@ t_cylin	*create_cylinder(char **args)
 	if (out_range_color(cylinder->color))
 		return (free(cylinder), print_error_null("Error\n", RANGE_ERR));
 	cylinder->color = ft_color_byte_to_per(cylinder->color);
-	cylinder->mat = ft_mat_new(ft_comp_diffuse_color);
+	cylinder->mat = ft_mat_new(base, ft_comp_diffuse_color);
 	if (!cylinder->mat)
 		return (free(cylinder), print_error_null("Error\n", MAT_ERR));
-	ft_gtf_set_transform(&cylinder->tm, cylinder->coord, ft_vec3_new(0, 0, 0),
+	ft_gtf_set_transform(&cylinder->tm, cylinder->coord,
+		rotation_matrix(cylinder->ori),
 		ft_vec3_new(cylinder->radius, cylinder->radius, cylinder->height));
 	return (cylinder);
 }
 
-t_plane	*create_plane(char **args)
+t_plane	*create_plane(t_base *base, char **args)
 {
 	t_plane	*plane;
 
@@ -53,15 +54,15 @@ t_plane	*create_plane(char **args)
 	if (out_range_color(plane->color))
 		return (free(plane), print_error_null("Error\n", RANGE_ERR));
 	plane->color = ft_color_byte_to_per(plane->color);
-	plane->mat = ft_mat_new(ft_comp_diffuse_color);
+	plane->mat = ft_mat_new(base, ft_comp_diffuse_color);
 	if (!plane->mat)
 		return (free(plane), print_error_null("Error\n", MAT_ERR));
-	ft_gtf_set_transform(&plane->tm, plane->coord, ft_vec3_new(0, 0, 0),
+	ft_gtf_set_transform(&plane->tm, plane->coord, rotation_matrix(plane->norm),
 		ft_vec3_new(99, 99, 1));
 	return (plane);
 }
 
-t_sphere	*create_sphere(char **args)
+t_sphere	*create_sphere(t_base *base, char **args)
 {
 	t_sphere	*sphere;
 
@@ -75,15 +76,15 @@ t_sphere	*create_sphere(char **args)
 	if (out_range_color(sphere->color))
 		return (free(sphere), print_error_null("Error\n", RANGE_ERR));
 	sphere->color = ft_color_byte_to_per(sphere->color);
-	sphere->mat = ft_mat_new(ft_comp_diffuse_color);
+	sphere->mat = ft_mat_new(base, ft_comp_diffuse_color);
 	if (!sphere->mat)
 		return (free(sphere), print_error_null("Error\n", MAT_ERR));
-	ft_gtf_set_transform(&sphere->tm, sphere->center, ft_vec3_new(0, 0, 0),
+	ft_gtf_set_transform(&sphere->tm, sphere->center, ft_mtrx_new(),
 		ft_vec3_new(sphere->radius, sphere->radius, sphere->radius));
 	return (sphere);
 }
 
-t_cone	*create_cone(char **args)
+t_cone	*create_cone(t_base *base, char **args)
 {
 	t_cone	*cone;
 
@@ -101,10 +102,10 @@ t_cone	*create_cone(char **args)
 	if (out_range_color(cone->color))
 		return (free(cone), print_error_null("Error\n", RANGE_ERR));
 	cone->color = ft_color_byte_to_per(cone->color);
-	cone->mat = ft_mat_new(ft_comp_diffuse_color);
+	cone->mat = ft_mat_new(base, ft_comp_diffuse_color);
 	if (!cone->mat)
 		return (free(cone), print_error_null("Error\n", MAT_ERR));
-	ft_gtf_set_transform(&cone->tm, cone->coord, ft_vec3_new(0, 0, 0),
+	ft_gtf_set_transform(&cone->tm, cone->coord, rotation_matrix(cone->ori),
 		ft_vec3_new(cone->radius, cone->radius, cone->height));
 	return (cone);
 }

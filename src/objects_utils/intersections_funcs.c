@@ -6,7 +6,7 @@
 /*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 11:11:35 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/30 11:08:30 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/05/31 15:21:07 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,13 @@ static void	ft_rec_setup(t_hit_rec *rec, t_objects *object,
 {
 	rec->object = object;
 	rec->p = tmp_rec.p;
-	rec->normal = tmp_rec.normal;
+    rec->eyev = ft_vec3_negate(ft_vec3_unit(r.lab));
+    if (ft_vec3_dot(tmp_rec.normal, rec->eyev) < 0)
+		rec->normal = ft_vec3_mult(tmp_rec.normal, -1);
+    else
+	    rec->normal = tmp_rec.normal;
 	rec->color = tmp_rec.color;
 	rec->mat = tmp_rec.mat;
-	rec->eyev = ft_vec3_negate(ft_vec3_unit(r.lab));
 }
 
 int	ft_anything_hit(t_objects *list, const t_ray r, t_hit_rec *rec)

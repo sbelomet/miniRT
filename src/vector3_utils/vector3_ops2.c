@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/23 09:54:04 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/04 11:57:30 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,11 @@ double	ft_vec3_len_squared(const t_vector3 v)
 
 t_vector3	ft_vec3_unit(t_vector3 v)
 {
-	return (ft_vec3_div(v, ft_vec3_len(v)));
+	double	len;
+
+	len = ft_vec3_len(v);
+	if (len != 0)
+		return (ft_vec3_div(v, len));
+	else
+		return (ft_vec3_new(0, 0, 0));
 }

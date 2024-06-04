@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/30 15:55:05 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/05/31 10:23:15 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,14 @@
 # define EPSILON 0.0001
 # define PIX_SAMPLE_SCALE 0.025
 # define MAX_DEPTH 10
+
+/* Key mapping macros */
+# define TAB_KEY 48
+# define ESC_KEY 53
+# define PLUS_KEY 69
+# define MINUS_KEY 78
+# define RENDER_KEY 76
+# define DE_SELECT_KEY 36
 
 # define FWDFORM 1
 # define BCKFORM 0
@@ -70,12 +78,10 @@ enum e_types
 	CONE,
 };
 
-enum e_materials
+enum e_type_add
 {
-	LAMBERTIAN,
-	METAL,
-	DIELECTRIC,
-	EMMISSIVE,
+	HEIGHT,
+	WIDTH,
 };
 
 /* Basic units structures */
@@ -259,12 +265,14 @@ typedef struct s_exposure
 	double		factor;
 }	t_exposure;
 
-typedef struct s_uniques
+typedef	struct s_selected
 {
-	t_light		*light;
-	t_camera	*camera;
-	t_alight	*alight;
-}				t_uniques;
+	int		id;
+	int		type;
+	int		type_add; // HEIGHT OR WIDTH, ONLY FOR CYLINDER
+	bool	modified;
+	bool    translation;
+}				t_selected;
 
 typedef struct s_image
 {
@@ -287,19 +295,12 @@ typedef struct s_base
 	t_alight		*alight;
 	int				exit_code;
 	unsigned long	seed;
+	t_selected		select;
 	t_objects		*first_object;
 	t_light			*first_light;
 }					t_base;
 
 /* Alternative structures */
-
-typedef struct s_hit
-{
-	double				t;
-	t_vector3			point;
-	t_color				color;
-	t_vector3			normal;
-}						t_hit;
 
 typedef struct s_equation
 {
@@ -322,7 +323,6 @@ typedef struct s_poi
 	int			index;
 }				t_poi;
 
-void		ft_render2(t_base *base);
 
 /* ------------------------------------- */
 
@@ -533,5 +533,8 @@ bool		ft_dark_spec(t_exposure *exp, t_hit_rec rec, t_light *light);
 t_color		ft_add_specular(t_light *light, t_hit_rec rec, t_exposure exp);
 t_light		*ft_light_new(t_vector3 coord, t_color	color, double intensity);
 int			ft_calc_lights(t_objects *list, t_hit_rec *rec, t_light *lights);
+
+/* Hooks */
+void		reset_select(t_base *base);
 
 #endif

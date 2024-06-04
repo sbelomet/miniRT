@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/24 10:53:59 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/30 15:55:38 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/04 12:58:24 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,6 @@ t_material	*ft_mat_new(t_base *base, void (*ft_comp_color)
 	mat->ft_comp_color = ft_comp_color;
 	mat->reflect = 0;
 	mat->shine = 400;
-    mat->spec = 1;
+    mat->spec = 5;
 	return (mat);
 }

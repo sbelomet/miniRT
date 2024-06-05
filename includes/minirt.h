@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/31 10:23:15 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:24:04 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,28 @@
 # define PIX_SAMPLE_SCALE 0.025
 # define MAX_DEPTH 10
 
-/* Key mapping macros */
+/* Keyboard mapping macros */
+# define A_KEY 0
+# define S_KEY 1
+# define D_KEY 2
+# define W_KEY 13
 # define TAB_KEY 48
 # define ESC_KEY 53
 # define PLUS_KEY 69
 # define MINUS_KEY 78
 # define RENDER_KEY 76
-# define DE_SELECT_KEY 36
+# define DESELECT_KEY 36
+# define LIGHT_SELECT 19
+# define CAMERA_SELECT 18
+# define CONTROL_LEFT 256
+# define CONTROL_RIGHT 269
 
+/* Mouse mapping macros */
+# define ROLL_UP 4
+# define ROLL_DOWN 5
+# define CLICK_LEFT 1
+
+/* Normal/inverse matrix */
 # define FWDFORM 1
 # define BCKFORM 0
 
@@ -180,6 +194,7 @@ typedef struct s_camera
 
 typedef struct s_light
 {
+	int				id;
 	t_vector3		coord;
 	double			ratio;
 	t_color			color;
@@ -265,13 +280,13 @@ typedef struct s_exposure
 	double		factor;
 }	t_exposure;
 
-typedef	struct s_selected
+typedef struct s_selected
 {
 	int		id;
 	int		type;
-	int		type_add; // HEIGHT OR WIDTH, ONLY FOR CYLINDER
 	bool	modified;
-	bool    translation;
+	bool	in_translation;
+	int		cylin_cone_modes; // HEIGHT OR WIDTH, ONLY FOR CYLINDER
 }				t_selected;
 
 typedef struct s_image
@@ -298,6 +313,7 @@ typedef struct s_base
 	t_selected		select;
 	t_objects		*first_object;
 	t_light			*first_light;
+	int				num_of_lights;
 }					t_base;
 
 /* Alternative structures */
@@ -322,7 +338,6 @@ typedef struct s_poi
 	int			tv[4];
 	int			index;
 }				t_poi;
-
 
 /* ------------------------------------- */
 

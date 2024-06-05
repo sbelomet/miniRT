@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 20:01:50 by scherty           #+#    #+#             */
-/*   Updated: 2024/05/30 10:02:54 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:19:54 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,14 @@ void	ft_light_add(t_light **light, t_light *new)
 {
 	t_light	*last;
 
+	new->id = -1;
 	if (!*light)
 	{
+		new->id = 1;
 		*light = new;
 		return ;
 	}
 	last = ft_light_last(*light);
+	new->id = last->id + 1;
 	last->next = new;
 }

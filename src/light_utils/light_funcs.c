@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 15:15:10 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/06/04 14:00:05 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:17:43 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ int	ft_compute_shadow(t_objects *list, t_objects *current,
 		{
 			if (tmp_obj->ft_hit(tmp_obj->object, light_ray, &light_rec))
 			{
-				dist = ft_vec3_len_squared(ft_vec3_sub(light_rec.p, light_ray.p1));
+				dist = ft_vec3_len_squared(
+						ft_vec3_sub(light_rec.p, light_ray.p1));
 				if (dist <= light_dist)
 				{
 					shadow_good = true;
@@ -69,7 +70,8 @@ int	ft_compute_light(t_objects *list, t_hit_rec *rec, t_light *l)
 		else
 		{
 			rec->emmited = l->color;
-			rec->intensity = l->ratio * (1.0 - (angle / 1.5708)) / light_dist * 90;
+			rec->intensity = l->ratio * (1.0 - (angle / 1.5708))
+				/ light_dist * 90;
 			return (true);
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   intersections_funcs.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 11:11:35 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/31 15:21:07 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:19:07 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,11 @@ static void	ft_rec_setup(t_hit_rec *rec, t_objects *object,
 {
 	rec->object = object;
 	rec->p = tmp_rec.p;
-    rec->eyev = ft_vec3_negate(ft_vec3_unit(r.lab));
-    if (ft_vec3_dot(tmp_rec.normal, rec->eyev) < 0)
+	rec->eyev = ft_vec3_negate(ft_vec3_unit(r.lab));
+	if (ft_vec3_dot(tmp_rec.normal, rec->eyev) < 0)
 		rec->normal = ft_vec3_mult(tmp_rec.normal, -1);
-    else
-	    rec->normal = tmp_rec.normal;
+	else
+		rec->normal = tmp_rec.normal;
 	rec->color = tmp_rec.color;
 	rec->mat = tmp_rec.mat;
 }

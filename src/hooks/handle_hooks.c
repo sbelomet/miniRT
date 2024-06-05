@@ -6,7 +6,7 @@
 /*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 12:50:48 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/30 15:56:45 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/06/04 14:00:52 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ bool	add_to_sphere(t_sphere *sphere, int type)
 	return (true);
 }
 
-bool	add_to_cylinder(t_cylin *cylinder, int type, int type_add)
+bool	add_to_cylinder(t_cylin *cylinder, int type, int mode)
 {
 	printf("Modifying attributes of cylinder\n");
 	if (type == PLUS_KEY)
 	{
-		if (type_add == HEIGHT)
+		if (mode == HEIGHT)
 			cylinder->height = cylinder->height + 0.5;
-		else if (type_add == WIDTH)
+		else if (mode == WIDTH)
 		{
 			cylinder->diam = cylinder->diam + 0.5;
 			cylinder->radius = cylinder->diam / 2;
@@ -39,9 +39,9 @@ bool	add_to_cylinder(t_cylin *cylinder, int type, int type_add)
 	}
 	else
 	{
-		if (type_add == HEIGHT)
+		if (mode == HEIGHT)
 			cylinder->height = cylinder->height - 0.5;
-		else if (type_add == WIDTH)
+		else if (mode == WIDTH)
 		{
 			cylinder->diam = cylinder->diam - 0.5;
 			cylinder->radius = cylinder->diam / 2;
@@ -67,7 +67,7 @@ bool	modify_value(t_base *base, int type)
 				modified = add_to_sphere((t_sphere *)objs->object, type);
 			if (objs->type == CYLINDER)
 				modified = add_to_cylinder((t_cylin *)objs->object, type,
-					base->select.type_add);
+					base->select.cylin_cone_modes);
 			if (modified)
 			{
 				base->select.modified = true;
@@ -83,14 +83,14 @@ void	switching_cylin_mode(t_base *base)
 {
 	if (base->select.type == CYLINDER)
 	{
-		if (base->select.type_add == HEIGHT)
+		if (base->select.cylin_cone_modes == HEIGHT)
 		{
-			base->select.type_add = WIDTH;
+			base->select.cylin_cone_modes = WIDTH;
 			printf("cylinder mode modification switched to width\n");
 		}
 		else
 		{
-			base->select.type_add = HEIGHT;
+			base->select.cylin_cone_modes = HEIGHT;
 			printf("cylinder mode modification switched to height\n");
 		}
 	}
@@ -100,10 +100,10 @@ void	switching_cylin_mode(t_base *base)
 void	reset_select(t_base *base)
 {
 	base->select.id = -1;
-    base->select.type = -1;
-	base->select.type_add = -1;
-    base->select.modified = false;
-    base->select.translation = false;
+	base->select.type = -1;
+	base->select.modified = false;
+	base->select.cylin_cone_modes = -1;
+	base->select.in_translation = false;
 }
 
 /*t_matrix	ft_create_matrix(void)
@@ -379,38 +379,81 @@ int	key_hook(int keycode, t_base *base)
 {
 	if (keycode == ESC_KEY)
 		close_window(base);
+	if (keycode == DESELECT_KEY)
+	{
+		reset_select(base);
+		printf("Deselected object, camera or light\n");
+	}
 	if (keycode == PLUS_KEY && base->select.id != -1)
 		{}//modify_value(base, PLUS_KEY);
-	if (keycode == TAB_KEY && base->select.id != -1)
-		{}//switching_cylin_mode(base);
-	if (keycode == DE_SELECT_KEY)
-		reset_select(base);
 	if (keycode == MINUS_KEY && base->select.id != -1)
 		{}//modify_value(base, MINUS_KEY);
-	if (keycode == 0 || keycode == 2 || keycode == 1 || keycode == 13) // keys "awsd"
+	if (keycode == A_KEY || keycode == D_KEY
+		|| keycode == S_KEY || keycode == W_KEY)
 		{}//ft_rotate(base, keycode);
-	if (keycode == 256 || keycode == 269) // control left and right
+	if (keycode == TAB_KEY && base->select.id != -1)
+		{}//switching_cylin_cone_mode(base);
+	if (keycode == CONTROL_LEFT || keycode == CONTROL_RIGHT)
 	{
 		if (base->select.id == -1)
 			printf("Before, you must select an object\n");
 		else
 		{
-			if (base->select.translation)
+			if (base->select.in_translation)
 				printf("Translation mode disable\n");
 			else
 				printf("Translation mode enable\n");
-			base->select.translation = !base->select.translation;
+			base->select.in_translation = !base->select.in_translation;
 		}
 	}
-	if ((keycode == RENDER_KEY && base->select.modified)
-		|| (base->select.modified && (keycode == 0 || keycode == 2
-		|| keycode == 1 || keycode == 13)))
+	if (keycode == CAMERA_SELECT)
+	{
+		if (base->select.type == CAMERA)
+			printf("Camera is already selected\n");
+		else
+		{
+			reset_select(base);
+			printf("Camera selected\n");
+			base->select.type = CAMERA;
+			base->select.id = -2;
+		}
+	}
+	if (keycode == LIGHT_SELECT)
+	{
+		if (base->select.type == LIGHT)
+		{
+			if (base->select.id < base->num_of_lights
+				&& base->num_of_lights > 1)
+			{
+				base->select.id = base->select.id + 1;
+				printf("light with id: %d selected\n", base->select.id);
+			}
+			else if (base->select.id == base->num_of_lights
+				&& base->num_of_lights > 1)
+			{
+				printf("light with id: 1 selected\n");
+				base->select.id = 1;
+			}
+			else
+				printf("Only one light available\n");
+		}
+		else if (base->num_of_lights != 0)
+		{
+			reset_select(base);
+			printf("light with id: 1 selected\n");
+			base->select.id = 1;
+			base->select.type = LIGHT;
+		}
+		else
+			printf("No lights in this scene\n");
+	}
+	if ((keycode == RENDER_KEY && base->select.modified))
 	{
 		printf("Rendering new scene\n");
 		//ft_render(base);
 		base->select.modified = false;
 	}
-	//printf("keycode: %d\n", keycode);
+	printf("keycode: %d\n", keycode);
 	return (1);
 }
 
@@ -420,11 +463,14 @@ void	ft_setup_selected(t_base *base)
 		printf("Sphere selected\n");
 	if (base->select.type == PLANE)
 		printf("Plane selected\n");
-	if (base->select.type == CYLINDER)
+	if (base->select.type == CYLINDER || base->select.type == CONE)
 	{
-		printf("Cylinder selected, mode Height selected by default\n");
-		base->select.type_add = HEIGHT;
-	}	
+		if (base->select.type == CYLINDER)
+			printf("Cylinder selected, mode Height selected by default\n");
+		else
+			printf("Cone selected, mode Height selected by default\n");
+		base->select.cylin_cone_modes = HEIGHT;
+	}
 }
 
 bool select_object(t_base *base, int x, int y)
@@ -443,16 +489,17 @@ bool select_object(t_base *base, int x, int y)
 
 int	button_hook(int buttoncode, int x, int y, t_base *base)
 {
-	//printf("buttoncode: %d\n", buttoncode);
+	printf("buttoncode: %d\n", buttoncode);
 	printf("pos: x:%d and y:%d\n", x, y);
-	if (!base->select.translation)
+	if (!base->select.in_translation && buttoncode == 1
+	&& (x >= 0 && x <= WIN_WIDTH) && (y >= 0 && y <= WIN_HEIGHT))
 	{
 		if (select_object(base, x, y))
 			printf("Object finded with id-> %d\n", base->select.id);
 		else
 			reset_select(base);
 	}
-	else if (base->select.translation && (x >= 0 && x <= WIN_WIDTH)
+	else if (base->select.in_translation && (x >= 0 && x <= WIN_WIDTH)
 		&& (y >= 0 && y <= WIN_HEIGHT))
 	{
 		if (buttoncode == 1) // click left
@@ -469,7 +516,7 @@ int	button_hook(int buttoncode, int x, int y, t_base *base)
 			
 		}
 	}
-	if (base->select.modified && base->select.translation && buttoncode == 1)
+	if (base->select.modified && base->select.in_translation && buttoncode == 1)
 	{
 		printf("Rendering new scene\n");
 		//ft_render(base);

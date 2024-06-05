@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:33:56 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/04 12:00:22 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:46:15 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,32 +61,28 @@ t_matrix	rotation_z(double rad)
 	printf("ratio: %lf\n", ratio);
 	printf("x: %lf\n", *x);
 } */
-
-t_matrix	rotation_matrix(t_vector3 normal)
-{
-/* 	double		x_angle;
-	double		y_angle;
-	//double		z_angle;
-	//t_matrix	rotate_z;
-	t_matrix	rotate_y;
-	t_matrix	rotate_x; */
-	t_matrix	full_rotation;
-
 /* 	//calculate_rotation_angles(normal, &x_angle, &z_angle);
 	calculate_rotation_angles(normal, &x_angle, &y_angle);
 	//rotate_z = rotation_z(z_angle);
 	rotate_y = rotation_y(y_angle);
-	ft_mtrx_print(rotate_y, "rotated y");
+	//ft_mtrx_print(rotate_y, "rotated y");
 	rotate_x = rotation_x(x_angle);
-	ft_mtrx_print(rotate_x, "rotated x");
+	//ft_mtrx_print(rotate_x, "rotated x");
 	//full_rotation = ft_mtrx_mult_mtrx(rotate_z, rotate_x);
 	full_rotation = ft_mtrx_mult_mtrx(rotate_y, rotate_x); */
- 	normal = ft_vec3_unit(normal);
-	double angle = acos(ft_vec3_dot(ft_vec3_new(0, 0, -1), normal));
-	t_vector3 axis = ft_vec3_unit(ft_vec3_cross(ft_vec3_new(0, 0, -1), normal));
-	double c = cos(angle);
-	double s = sin(angle);
-	double t = 1 - c;
+t_matrix	rotation_matrix(t_vector3 normal)
+{
+	t_matrix	full_rotation;
+	t_vector3	axis;
+	double		c;
+	double		s;
+	double		t;
+
+	normal = ft_vec3_unit(normal);
+	axis = ft_vec3_unit(ft_vec3_cross(ft_vec3_new(0, 0, -1), normal));
+	c = cos(acos(ft_vec3_dot(ft_vec3_new(0, 0, -1), normal)));
+	s = sin(acos(ft_vec3_dot(ft_vec3_new(0, 0, -1), normal)));
+	t = 1 - c;
 	full_rotation = ft_mtrx_new();
 	full_rotation.m[0][0] = c + pow(axis.x, 2) * t;
 	full_rotation.m[0][1] = axis.x * axis.y * t - axis.z * s;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/21 15:29:49 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/04 10:53:02 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ enum e_types
 	CYLINDER,
 };
 
-enum e_type_add
+enum e_modes
 {
 	HEIGHT,
 	WIDTH,
@@ -223,9 +223,11 @@ typedef	struct s_selected
 {
 	int		id;
 	int		type;
-	int		type_add; // HEIGHT OR WIDTH, ONLY FOR CYLINDER
 	bool	modified;
-	bool    translation;
+	bool	cam_select;
+	bool	light_select;
+	bool    in_translation;
+	int		cylin_cone_modes; // HEIGHT OR WIDTH, ONLY FOR CYLINDER
 }				t_selected;
 
 typedef struct s_hittable
@@ -321,8 +323,6 @@ typedef struct s_gtform
 	t_matrix	fwdtfm;
 	t_matrix	bcktfm;
 }				t_gtform;
-
-void    ft_render2(t_base *base);
 
 /* ------------------------------------- */
 

@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:08:42 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/30 12:38:17 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:18:26 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ bool	add_light(t_base *base, char **args)
 	if (!light)
 		return (free(light), false);
 	ft_light_add(&base->first_light, light);
+	base->num_of_lights++;
 	return (true);
 }
 
@@ -52,8 +53,6 @@ t_camera	*create_camera(char **args)
 		return (print_error_null("Error\n", MALLOC_ERR));
 	camera->lookfrom = parse_vector(args[0]);
 	camera->lookat = parse_vector(args[1]);
-	if (out_range_norm(camera->lookat))
-		return (free(camera), print_error_null("Error\n", RANGE_ERR));
 	camera->vup = ft_vec3_new(0, 0, 1);
 	camera->length = 2;
 	camera->aspect = 16.0 / 9.0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   base_init.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:47:15 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/05 15:20:39 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:57:47 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,17 @@ void	set_base(t_base *base)
 	base->seed = (unsigned long)&base;
 }
 
+int	ft_create_image(t_base *base)
+{
+	base->image.img_ptr = mlx_new_image(base->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
+	if (!base->image.img_ptr)
+		return (print_error(IMG_ERR, NULL, 1), set_exit_code(base, 1, 1));
+	base->image.img_data = mlx_get_data_addr(base->image.img_ptr,
+			&base->image.bitsperpix, &base->image.size_line,
+			&base->image.endian);
+	return (0);
+}
+
 int	ft_base_init(t_base *base)
 {
 	base->mlx_ptr = mlx_init();
@@ -37,11 +48,5 @@ int	ft_base_init(t_base *base)
 	base->win_ptr = mlx_new_window(base->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, TITLE);
 	if (!base->win_ptr)
 		return (print_error(WIN_ERR, NULL, 1), set_exit_code(base, 1, 1));
-	base->image.img_ptr = mlx_new_image(base->mlx_ptr, WIN_WIDTH, WIN_HEIGHT);
-	if (!base->image.img_ptr)
-		return (print_error(IMG_ERR, NULL, 1), set_exit_code(base, 1, 1));
-	base->image.img_data = mlx_get_data_addr(base->image.img_ptr,
-			&base->image.bitsperpix, &base->image.size_line,
-			&base->image.endian);
 	return (0);
 }

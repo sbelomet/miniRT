@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 10:07:41 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/30 15:01:03 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/06 09:57:14 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ static void	ft_free_lights(t_light *first_light)
 
 void	on_destroy(t_base *base)
 {
-	if (base->image.img_ptr)
-		mlx_destroy_image(base->mlx_ptr, base->image.img_ptr);
 	if (base->win_ptr)
 		mlx_destroy_window(base->mlx_ptr, base->win_ptr);
 	if (base->mlx_ptr)

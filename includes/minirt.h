@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/05 15:24:04 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/06 11:29:20 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@
 # define A_KEY 0
 # define S_KEY 1
 # define D_KEY 2
+# define Z_KEY 6
+# define X_KEY 7
 # define W_KEY 13
 # define TAB_KEY 48
 # define ESC_KEY 53
@@ -124,6 +126,9 @@ typedef struct s_gtform
 {
 	t_matrix	fwdtfm;
 	t_matrix	bcktfm;
+	t_matrix	scaling;
+	t_matrix	rotation;
+	t_matrix	translation;
 }				t_gtform;
 
 typedef struct s_color
@@ -366,10 +371,11 @@ int			close_window(t_base *base);
 /* ---------------- */
 
 /* Init */
+t_camera	*ft_cam_new(void);
 void		set_base(t_base *base);
 int			ft_base_init(t_base *base);
-t_camera	*ft_cam_new(void);
 void		ft_update_cam(t_camera *cam);
+int			ft_create_image(t_base *base);
 
 /* Errors */
 void		*print_error_null(char *error, char *var);
@@ -467,6 +473,7 @@ t_vector3	ft_vec3_rand_unit(t_base *base);
 t_vector3	ft_vec3_rand_hemis(t_base *base, const t_vector3 normal);
 int			ft_vec3_grtr(const t_vector3 v1, const t_vector3 v2);
 int			ft_vec3_lssr(const t_vector3 v1, const t_vector3 v2);
+int			ft_vec3_equal(const t_vector3 v1, const t_vector3 v2);
 t_vector3	ft_vec3_negate(t_vector3 vec);
 
 /* Vector4 Utils */
@@ -486,14 +493,17 @@ t_matrix	ft_mtrx_inverse(const t_matrix m);
 
 /* Geometric Transforms Utils */
 t_gtform	ft_gtf_new(void);
+
 t_matrix	rotation_z(double rad);
 t_matrix	rotation_x(double rad);
 t_matrix	rotation_y(double rad);
+t_matrix	mtrx_scaling(t_vector3 scale);
+t_matrix	mtrx_translate(t_vector3 coord);
 t_matrix	rotation_matrix(t_vector3 normal);
 t_gtform	ft_gtf_new2(const t_matrix fwd, const t_matrix bck);
 t_gtform	ft_gtf_mult(const t_gtform g1, const t_gtform g2);
-void		ft_gtf_set_transform(t_gtform *gt, const t_vector3 trans,
-				const t_matrix rot_mtrx, const t_vector3 scale);
+void	ft_gtf_set_transform(t_gtform *gt, const t_matrix trans,
+	const t_matrix rot_mtrx, const t_matrix scale);
 t_ray		ft_gtf_apply_ray(const t_gtform gt,
 				const t_ray r, const int dir_flag);
 t_vector3	ft_gtf_apply_vec3(const t_gtform gt, const t_vector3 v,

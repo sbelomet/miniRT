@@ -6,7 +6,7 @@
 /*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 12:50:48 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/04 14:00:52 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:49:34 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,9 +79,171 @@ bool	modify_value(t_base *base, int type)
 	return (false);
 }
 
-void	switching_cylin_mode(t_base *base)
+/*bool	ft_rotable_normal(t_vector3 normal)
 {
-	if (base->select.type == CYLINDER)
+	if (normal.x == 0 && normal.y == 0 && (normal.z == 1 || normal.z == -1))
+	{
+		printf("No rotation\n");
+		return (false);
+	}
+	return (true);
+}*/
+
+t_matrix	mtrx_rotation_x(double rad)
+{
+	t_matrix	table;
+
+	table = ft_mtrx_new();
+	table.m[1][1] = cos(rad);
+	table.m[1][2] = -sin(rad);
+	table.m[2][1] = sin(rad);
+	table.m[2][2] = cos(rad);
+	return (table);
+}
+
+t_matrix	mtrx_rotation_y(double rad)
+{
+	t_matrix	table;
+
+	table = ft_mtrx_new();
+	table.m[0][0] = cos(rad);
+	table.m[0][2] = sin(rad);
+	table.m[2][0] = -sin(rad);
+	table.m[2][2] = cos(rad);
+	return (table);
+}
+
+t_matrix	mtrx_rotation_z(double rad)
+{
+	t_matrix	table;
+
+	table = ft_mtrx_new();
+	table.m[0][0] = cos(rad);
+	table.m[0][1] = -sin(rad);
+	table.m[1][0] = sin(rad);
+	table.m[1][1] = cos(rad);
+	return (table);
+}
+
+t_matrix	mtrx_translate(t_vector3 coord)
+{
+	t_matrix	table;
+
+	table = ft_mtrx_new();
+	table.m[0][3] = coord.x;
+	table.m[1][3] = coord.y;
+	table.m[2][3] = coord.z;
+	return (table);
+}
+
+t_matrix	mtrx_scaling(t_vector3 scale)
+{
+	t_matrix	table;
+
+	table = ft_mtrx_new();
+	table.m[0][0] = scale.x;
+	table.m[1][1] = scale.y;
+	table.m[2][2] = scale.z;
+	return (table);
+}
+
+bool	ft_rotable_keys(int	keycode)
+{
+	if (keycode == A_KEY || keycode == D_KEY || keycode == S_KEY
+		|| keycode == W_KEY || keycode == Z_KEY || keycode == X_KEY)
+		return (true);
+	return (false);
+}
+
+bool	ft_rotation_plane(t_plane *plane, int keycode)
+{
+	t_matrix	matrix;
+
+	if (ft_rotable_keys(keycode))
+	{
+		if (keycode == Z_KEY || keycode == X_KEY)
+			matrix = rotation_z(ft_deg_to_rad(5));
+		else if (keycode == S_KEY || keycode == W_KEY)
+			matrix = rotation_z(ft_deg_to_rad(5));
+		else if (keycode == A_KEY || keycode == D_KEY)
+			matrix = rotation_z(ft_deg_to_rad(5));
+		else
+			return (false);
+		matrix = ft_mtrx_mult_mtrx(plane->tm.fwdtfm, matrix);
+		plane->tm.fwdtfm = matrix;
+		plane->tm.bcktfm = ft_mtrx_inverse(plane->tm.fwdtfm);
+		return (true);
+	}
+	return (false);
+}
+
+bool	ft_rotation_cylinder(t_cylin *cylinder, int keycode)
+{
+	double		angle;
+	t_matrix	new_rotation;
+
+	angle = ft_deg_to_rad(10);
+	if (ft_rotable_keys(keycode))
+	{
+		if (keycode == Z_KEY || keycode == X_KEY)
+			new_rotation = rotation_y(angle);
+		else if (keycode == S_KEY || keycode == W_KEY)
+			new_rotation = rotation_z(angle);
+		else if (keycode == A_KEY || keycode == D_KEY)
+			new_rotation = rotation_x(angle);
+		else
+			return (false);
+		cylinder->tm.rotation = ft_mtrx_mult_mtrx(cylinder->tm.rotation,
+			new_rotation);
+		ft_gtf_set_transform(&cylinder->tm, cylinder->tm.translation,
+			cylinder->tm.rotation, cylinder->tm.scaling);
+		return (true);
+	}
+	return (false);
+}
+
+void	ft_rotate(t_base *base, int keycode)
+{
+	t_objects	*objs;
+
+	objs = base->first_object;
+	while (objs)
+	{
+		if (objs->id == base->select.id && objs->type == PLANE)
+		{
+			printf("PLANE\n");
+			if (ft_rotation_plane((t_plane *)objs->object, keycode))
+			{
+				printf("MODIFIED\n");
+				base->select.modified = true;
+			}	
+		}
+		if (objs->id == base->select.id && objs->type == CYLINDER)
+		{
+			printf("CYLINDER\n");
+			if (ft_rotation_cylinder((t_cylin *)objs->object, keycode))
+			{
+				printf("MODIFIED\n");
+				base->select.modified = true;
+			}	
+		}
+		/*if (objs->id == base->select.id && objs->type == CONE)
+		{
+			//if (ft_rotation_cylinder((t_cylin *)objs->object, keycode))
+			//	base->select.modified = true;
+		}
+		if (base->select.id == -2 && objs->type == CAMERA)
+		{
+			//if (ft_rotation_cylinder((t_cylin *)objs->object, keycode))
+			//	base->select.modified = true;
+		}*/
+		objs = objs->next;
+	}
+}
+
+void	switching_cylin_cone_mode(t_base *base)
+{
+	if (base->select.type == CYLINDER || base->select.type == CONE)
 	{
 		if (base->select.cylin_cone_modes == HEIGHT)
 		{
@@ -106,275 +268,6 @@ void	reset_select(t_base *base)
 	base->select.in_translation = false;
 }
 
-/*t_matrix	ft_create_matrix(void)
-{
-	int			i;
-	int			j;
-	t_matrix	matrix;
-
-	i = -1;
-	while (++i < 4)
-	{
-		j = -1;
-		while (++j < 4)
-		{
-			matrix.m[i][j] = 0;
-			if (i == j)
-				matrix.m[i][j] = 1;
-		}
-	}
-	return (matrix);
-}
-
-t_matrix	ft_mult_matrix(t_matrix a, t_matrix b)
-{
-	int			i;
-	int			j;
-	int			k;
-	t_matrix	matrix;
-
-	i = -1;
-	while (++i < 4)
-	{
-		j = -1;
-		while (++j < 4)
-		{
-			matrix.m[i][j] = 0;
-			k = -1;
-			while (++k < 4)
-				matrix.m[i][j] += a.m[i][k] * b.m[k][j];
-		}
-	}
-	return (matrix);
-}
-
-t_matrix	ft_reverse_x(double angle)
-{
-	t_matrix	matrix;
-
-	matrix = ft_create_matrix();
-	matrix.m[1][1] = cos(angle);
-	matrix.m[1][2] = sin(angle);
-	matrix.m[2][1] = -sin(angle);
-	matrix.m[2][2] = cos(angle);
-	return (matrix);
-}
-
-t_matrix	ft_reverse_y(double angle)
-{
-	t_matrix	matrix;
-
-	matrix = ft_create_matrix();
-	matrix.m[0][0] = cos(angle);
-	matrix.m[0][2] = -sin(angle);
-	matrix.m[2][0] = sin(angle);
-	matrix.m[2][2] = cos(angle);
-	return (matrix);
-}
-
-t_matrix	ft_reverse_z(double angle)
-{
-	t_matrix	matrix;
-
-	matrix = ft_create_matrix();
-	matrix.m[0][0] = cos(angle);
-	matrix.m[0][1] = sin(angle);
-	matrix.m[1][0] = -sin(angle);
-	matrix.m[1][1] = cos(angle);
-	return (matrix);
-}
-
-t_matrix	ft_rotate_x(double angle)
-{
-	t_matrix	matrix;
-
-	matrix = ft_create_matrix();
-	matrix.m[1][1] = cos(angle);
-	matrix.m[1][2] = -sin(angle);
-	matrix.m[2][1] = sin(angle);
-	matrix.m[2][2] = cos(angle);
-	return (matrix);
-}
-
-t_matrix	ft_rotate_y(double angle)
-{
-	t_matrix	matrix;
-
-	matrix = ft_create_matrix();
-	matrix.m[0][0] = cos(angle);
-	matrix.m[0][2] = sin(angle);
-	matrix.m[2][0] = -sin(angle);
-	matrix.m[2][2] = cos(angle);
-	return (matrix);
-}
-
-t_matrix	ft_rotate_z(double angle)
-{
-	t_matrix	matrix;
-
-	matrix = ft_create_matrix();
-	matrix.m[0][0] = cos(angle);
-	matrix.m[0][1] = -sin(angle);
-	matrix.m[1][0] = sin(angle);
-	matrix.m[1][1] = cos(angle);
-	return (matrix);
-}
-
-t_matrix	ft_matrix_rotate(t_vector3 normal)
-{
-	t_matrix	matrix;
-
-	matrix = ft_create_matrix();
-	matrix = ft_mult_matrix(ft_rotate_x(normal.x), matrix);
-	matrix = ft_mult_matrix(ft_rotate_y(normal.y), matrix);
-	matrix = ft_mult_matrix(ft_rotate_z(normal.z), matrix);
-	return (matrix);
-}
-
-t_matrix	ft_matrix_rotate_x(int keycode)
-{
-	t_matrix	matrix;
-	(void)keycode;
-	matrix = ft_create_matrix();
-	matrix = ft_mult_matrix(ft_rotate_x(0.5), matrix);
-	return (matrix);
-}
-
-t_matrix	ft_matrix_rotate_y(int keycode)
-{
-	t_matrix	matrix;
-
-	matrix = ft_create_matrix();
-    if (keycode == 13)
-		matrix = ft_mult_matrix(ft_rotate_y(0.5), matrix);
-	else
-		matrix = ft_mult_matrix(ft_reverse_y(0.5), matrix);
-	return (matrix);
-}
-
-t_vector3	ft_matrix_to_vector3(t_matrix m, t_vector3 v)
-{
-	t_vector3	vec;
-
-	vec.x = m.m[0][0] * v.x + m.m[1][0] * v.y + m.m[2][0] * v.z + m.m[3][0];
-	vec.y = m.m[0][1] * v.x + m.m[1][1] * v.y + m.m[2][1] * v.z + m.m[3][1];
-	vec.z = m.m[0][2] * v.x + m.m[1][2] * v.y + m.m[2][2] * v.z + m.m[3][2];
-	//vec.w = m.m[0][3] * v.x + m.m[1][3] * v.y + m.m[2][3] * v.z + m.m[3][3];
-	return (vec);
-}
-
-bool	ft_rotation_plane(t_plane *plane, int keycode)
-{		
-	t_matrix	res_matrix;
-
-	if (keycode == 0 || keycode == 2 || keycode == 1 || keycode == 13)
-	{
-		if (keycode == 0 || keycode == 2)
-			res_matrix = ft_matrix_rotate_x(keycode);
-		if (keycode == 1 || keycode == 13)
-			res_matrix = ft_matrix_rotate_y(keycode);
-		plane->norm = ft_matrix_to_vector3(res_matrix, plane->norm);
-		return (true);
-	}
-	return (false);
-}
-
-void	ft_rotate(t_base *base, int keycode)
-{
-	t_objects	*objs;
-
-	objs = base->first_object;
-	while (objs)
-	{
-		if (objs->id == base->select.id && objs->type == PLANE)
-		{
-			if (ft_rotation_plane((t_plane *)objs->object, keycode))
-				base->select.modified = true;
-		}
-		//if (objs->id == base->select.id && objs->type == CYLINDER)
-		//{
-		//	if (ft_rotation_cylinder((t_cylin *)objs->object, keycode))
-		//		base->select.modified = true;
-		//}
-		objs = objs->next;
-	}
-}
-
-t_matrix	ft_translate(double x, double y)
-{
-	t_matrix	matrix;
-
-	matrix = ft_create_matrix();
-	matrix.m[3][0] = x;
-	matrix.m[3][1] = y;
-	//matrix.m[3][3] = 0; w at 0 for translation?
-	return (matrix);
-}
-
-double	calc_delta(double a, double b)
-{
-	printf("a: %lf and b: %lf\n", a , b);
-	printf("a - b: %lf and b - a: %lf\n", (a-b) , (b - a));
-	if (a > b)
-		return (a - b);
-	else
-		return (b - a);
-}
-
-bool	ft_plane_translation(t_plane *plane, int x, int y)
-{
-	t_matrix	res_matrix;
-
-	res_matrix = ft_translate(calc_delta(plane->coord.x, (double)x),
-		calc_delta(plane->coord.y, (double)y));
-	plane->coord = ft_matrix_to_vector3(res_matrix, plane->coord);
-	return (true);
-}
-
-bool	ft_sphere_translation(t_sphere *sphere, int x, int y)
-{
-	t_matrix	res_matrix;
-	
-	res_matrix = ft_translate(calc_delta(sphere->center.x, (double)x),
-		calc_delta(sphere->center.y, (double)y));
-	sphere->center = ft_matrix_to_vector3(res_matrix, sphere->center);
-	printf("sphere center: x-> %lf, y-> %lf, z-> %lf\n", sphere->center.x, sphere->center.y, sphere->center.z);
-	return (true);
-}
-
-bool	ft_cylin_translation(t_cylin *cylinder, int x, int y)
-{
-	t_matrix	res_matrix;
-
-	res_matrix = ft_translate(calc_delta(cylinder->coord.x, (double)x),
-		calc_delta(cylinder->coord.y, (double)y));
-	cylinder->coord = ft_matrix_to_vector3(res_matrix, cylinder->coord);
-	return (true);
-}
-
-void	ft_translation(t_base *base, int x, int y)
-{
-	t_objects	*objs;
-
-	objs = base->first_object;
-	while (objs)
-	{
-		if (objs->id == base->select.id)
-		{
-			if (objs->type == PLANE &&
-				ft_plane_translation((t_plane *)objs->object, x, y))
-				base->select.modified = true;
-			if (objs->type == SPHERE &&
-				ft_sphere_translation((t_sphere *)objs->object, x, y))
-				base->select.modified = true;
-			if (objs->type == CYLINDER &&
-				ft_cylin_translation((t_cylin *)objs->object, x, y))
-				base->select.modified = true;
-		}
-		objs = objs->next;
-	}
-}*/
-
 int	key_hook(int keycode, t_base *base)
 {
 	if (keycode == ESC_KEY)
@@ -388,9 +281,8 @@ int	key_hook(int keycode, t_base *base)
 		{}//modify_value(base, PLUS_KEY);
 	if (keycode == MINUS_KEY && base->select.id != -1)
 		{}//modify_value(base, MINUS_KEY);
-	if (keycode == A_KEY || keycode == D_KEY
-		|| keycode == S_KEY || keycode == W_KEY)
-		{}//ft_rotate(base, keycode);
+	if (ft_rotable_keys(keycode) && base->select.id != -1)
+		ft_rotate(base, keycode);
 	if (keycode == TAB_KEY && base->select.id != -1)
 		{}//switching_cylin_cone_mode(base);
 	if (keycode == CONTROL_LEFT || keycode == CONTROL_RIGHT)
@@ -450,7 +342,7 @@ int	key_hook(int keycode, t_base *base)
 	if ((keycode == RENDER_KEY && base->select.modified))
 	{
 		printf("Rendering new scene\n");
-		//ft_render(base);
+		ft_render(base);
 		base->select.modified = false;
 	}
 	printf("keycode: %d\n", keycode);
@@ -481,6 +373,11 @@ bool select_object(t_base *base, int x, int y)
 	ft_generate_ray(*base->camera, x, y, &ray);
 	if (!ft_anything_hit(base->first_object, ray, &rec))
 		return (false);
+	if (base->select.id == rec.object->id)
+	{
+		printf("Already selected\n");
+		return (true);
+	}
 	base->select.id = rec.object->id;
 	base->select.type = rec.object->type;
 	ft_setup_selected(base);
@@ -489,15 +386,18 @@ bool select_object(t_base *base, int x, int y)
 
 int	button_hook(int buttoncode, int x, int y, t_base *base)
 {
-	printf("buttoncode: %d\n", buttoncode);
-	printf("pos: x:%d and y:%d\n", x, y);
+	//printf("buttoncode: %d\n", buttoncode);
+	//printf("pos: x:%d and y:%d\n", x, y);
 	if (!base->select.in_translation && buttoncode == 1
 	&& (x >= 0 && x <= WIN_WIDTH) && (y >= 0 && y <= WIN_HEIGHT))
 	{
 		if (select_object(base, x, y))
 			printf("Object finded with id-> %d\n", base->select.id);
 		else
+		{
+			printf("Reseting object selection\n");
 			reset_select(base);
+		}	
 	}
 	else if (base->select.in_translation && (x >= 0 && x <= WIN_WIDTH)
 		&& (y >= 0 && y <= WIN_HEIGHT))

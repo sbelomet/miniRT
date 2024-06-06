@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
+/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 11:38:22 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/30 15:58:32 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/06/06 09:58:04 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,5 +37,6 @@ int	main(const int argc, char **argv)
 		on_destroy(&base);
 	ft_render(&base);
 	ft_hooks(&base);
+	on_destroy(&base);
 	return (EXIT_SUCCESS);
 }

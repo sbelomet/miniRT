@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:08:51 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/30 10:02:19 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/06 09:57:59 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ void	ft_render(t_base *base)
 
 	rec.base = base;
 	y = -1;
+	if (ft_create_image(base))
+		return ;
 	while (++y < WIN_HEIGHT)
 	{
 		x = -1;
@@ -50,5 +52,6 @@ void	ft_render(t_base *base)
 	}
 	mlx_put_image_to_window(base->mlx_ptr, base->win_ptr,
 		base->image.img_ptr, 0, 0);
+	mlx_destroy_image(base->mlx_ptr, base->image.img_ptr);
 	printf("Done!\n");
 }

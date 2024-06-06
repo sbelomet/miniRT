@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gtfm_transforms.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 14:35:25 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/06/04 12:00:18 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:24:01 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,22 +32,10 @@
 	(*rot_x_mtrx).m[2][2] = cos(rot.x);
 }*/
 
-void	ft_gtf_set_transform(t_gtform *gt, const t_vector3 trans,
-	const t_matrix rot_mtrx, const t_vector3 scale)
+void	ft_gtf_set_transform(t_gtform *gt, const t_matrix trans,
+	const t_matrix rot_mtrx, const t_matrix scale)
 {
-	t_matrix	trans_mtrx;
-	t_matrix	scale_mtrx;
-
-	trans_mtrx = ft_mtrx_new();
-	scale_mtrx = ft_mtrx_new();
-	trans_mtrx.m[0][3] = trans.x;
-	trans_mtrx.m[1][3] = trans.y;
-	trans_mtrx.m[2][3] = trans.z;
-	scale_mtrx.m[0][0] = scale.x;
-	scale_mtrx.m[1][1] = scale.y;
-	scale_mtrx.m[2][2] = scale.z;
-	gt->fwdtfm = ft_mtrx_mult_mtrx(trans_mtrx,
-			ft_mtrx_mult_mtrx(rot_mtrx, scale_mtrx));
+	gt->fwdtfm = ft_mtrx_mult_mtrx(trans, ft_mtrx_mult_mtrx(rot_mtrx, scale));
 	gt->bcktfm = ft_mtrx_inverse(gt->fwdtfm);
 }
 

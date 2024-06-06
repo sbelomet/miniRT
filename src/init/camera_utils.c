@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 10:06:19 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/28 13:02:22 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/06 11:54:04 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,9 @@ t_camera	*ft_cam_new(void)
 void	ft_update_cam(t_camera *cam)
 {
 	cam->alignment = ft_vec3_unit(ft_vec3_sub(cam->lookat, cam->lookfrom));
+	if (ft_vec3_equal(cam->alignment, cam->vup)
+		|| ft_vec3_equal(cam->alignment, ft_vec3_negate(cam->vup)))
+		cam->vup = ft_vec3_new(0, 1, 0);
 	cam->proj_screen_u = ft_vec3_unit(ft_vec3_cross(cam->alignment, cam->vup));
 	cam->proj_screen_v = ft_vec3_unit(ft_vec3_cross(
 				cam->proj_screen_u, cam->alignment));

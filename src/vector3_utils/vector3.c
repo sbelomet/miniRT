@@ -6,7 +6,7 @@
 /*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/20 15:44:42 by scherty           #+#    #+#             */
-/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/06 10:21:29 by sbelomet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_vector3	ft_vec3_new(const double x, const double y, const double z)
 
 void	ft_vec3_print(const t_vector3 v, const char *name)
 {
-	printf("Vector3 %s(x:%f, y:%f, z:%f)\n", name, v.x, v.y, v.z);
+	printf("Vector3 %s(x:%lf, y:%lf, z:%lf)\n", name, v.x, v.y, v.z);
 }
 /* 
 t_vector3	ft_set_face_normal(const t_ray r, const t_vector3 outward_normal,

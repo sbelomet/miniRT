@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   creating_objs.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:05:07 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/04 12:00:17 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/05 15:46:07 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,12 @@ t_cylin	*create_cylinder(t_base *base, char **args)
 	cylinder->mat = ft_mat_new(base, ft_comp_diffuse_color);
 	if (!cylinder->mat)
 		return (free(cylinder), print_error_null("Error\n", MAT_ERR));
-	ft_gtf_set_transform(&cylinder->tm, cylinder->coord,
-		rotation_matrix(cylinder->ori),
-		ft_vec3_new(cylinder->radius, cylinder->radius, cylinder->height));
+	cylinder->tm.translation = mtrx_translate(cylinder->coord);
+	cylinder->tm.rotation = rotation_matrix(cylinder->ori);
+	cylinder->tm.scaling = mtrx_scaling(ft_vec3_new(cylinder->radius,
+		cylinder->radius, cylinder->height));
+	ft_gtf_set_transform(&cylinder->tm, cylinder->tm.translation,
+		cylinder->tm.rotation, cylinder->tm.scaling);
 	return (cylinder);
 }
 
@@ -57,8 +60,11 @@ t_plane	*create_plane(t_base *base, char **args)
 	plane->mat = ft_mat_new(base, ft_comp_diffuse_color);
 	if (!plane->mat)
 		return (free(plane), print_error_null("Error\n", MAT_ERR));
-	ft_gtf_set_transform(&plane->tm, plane->coord, rotation_matrix(plane->norm),
-		ft_vec3_new(99, 99, 1));
+	plane->tm.translation = mtrx_translate(plane->coord);
+	plane->tm.rotation = rotation_matrix(plane->norm);
+	plane->tm.scaling = mtrx_scaling(ft_vec3_new(99, 99, 1));
+	ft_gtf_set_transform(&plane->tm, plane->tm.translation, plane->tm.rotation,
+		plane->tm.scaling);
 	return (plane);
 }
 
@@ -79,8 +85,12 @@ t_sphere	*create_sphere(t_base *base, char **args)
 	sphere->mat = ft_mat_new(base, ft_comp_diffuse_color);
 	if (!sphere->mat)
 		return (free(sphere), print_error_null("Error\n", MAT_ERR));
-	ft_gtf_set_transform(&sphere->tm, sphere->center, ft_mtrx_new(),
-		ft_vec3_new(sphere->radius, sphere->radius, sphere->radius));
+	sphere->tm.translation = mtrx_translate(sphere->center);
+	sphere->tm.rotation = ft_mtrx_new();
+	sphere->tm.scaling = mtrx_scaling(ft_vec3_new(sphere->radius,
+		sphere->radius, sphere->radius));
+	ft_gtf_set_transform(&sphere->tm, sphere->tm.translation,
+		sphere->tm.rotation, sphere->tm.scaling);
 	return (sphere);
 }
 
@@ -105,7 +115,11 @@ t_cone	*create_cone(t_base *base, char **args)
 	cone->mat = ft_mat_new(base, ft_comp_diffuse_color);
 	if (!cone->mat)
 		return (free(cone), print_error_null("Error\n", MAT_ERR));
-	ft_gtf_set_transform(&cone->tm, cone->coord, rotation_matrix(cone->ori),
-		ft_vec3_new(cone->radius, cone->radius, cone->height));
+	cone->tm.translation = mtrx_translate(cone->coord);
+	cone->tm.rotation = rotation_matrix(cone->ori);
+	cone->tm.scaling = mtrx_scaling(ft_vec3_new(cone->radius,
+		cone->radius, cone->height));
+	ft_gtf_set_transform(&cone->tm, cone->tm.translation, cone->tm.rotation,
+		cone->tm.scaling);
 	return (cone);
 }

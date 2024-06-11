@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+         #
+#    By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/14 10:06:00 by lgosselk          #+#    #+#              #
-#    Updated: 2024/05/30 15:54:54 by sbelomet         ###   ########.fr        #
+#    Updated: 2024/06/07 14:08:21 by lgosselk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,7 +53,8 @@ F_INIT			=	base_init camera_utils
 F_PARSING		=	file_parse creating_objs creating_uniques defaults
 F_COLOR			=	color color_ops1
 F_DRAW			=	draw
-F_HOOKS			=	handle_hooks
+F_HOOKS			=	handle_hooks attribute_hook handle_hooks2 mouse_hook rotation_hook \
+					rotation_hook2 translate_hook translate_hook2 translate_z_hook translate_z_hook2
 F_MATH_UTILS	=	rng angles swap close_enough
 F_VEC3_UTILS	=	vector3 vector3_ops1 vector3_ops2 vector3_rand vector3_comp vector3_ops3
 F_VEC4_UTILS	=	vector4 vector4_ops

@@ -6,7 +6,7 @@
 /*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/22 09:47:15 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/05 15:57:47 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/06/07 13:53:59 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	set_base(t_base *base)
 {
-	reset_select(base);
+	reset_select(base, 0);
 	base->alloc = NULL;
 	base->exit_code = 0;
 	base->camera = NULL;

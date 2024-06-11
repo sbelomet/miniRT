@@ -1,36 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector3.c                                          :+:      :+:    :+:   */
+/*   enums.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/04/20 15:44:42 by scherty           #+#    #+#             */
-/*   Updated: 2024/06/07 14:30:35 by lgosselk         ###   ########.fr       */
+/*   Created: 2024/06/10 10:45:38 by lgosselk          #+#    #+#             */
+/*   Updated: 2024/06/10 10:46:20 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minirt.h"
+#ifndef ENUMS_H
+# define ENUMS_H
 
-t_vector3	ft_vec3_new(const double x, const double y, const double z)
+enum e_types
 {
-	t_vector3	v;
+	ALIGHT,
+	CAMERA,
+	LIGHT,
+	SPHERE,
+	PLANE,
+	CYLINDER,
+	CONE,
+};
 
-	v.x = x;
-	v.y = y;
-	v.z = z;
-	return (v);
-}
-
-void	ft_vec3_print(const t_vector3 v, const char *name)
+enum e_type_add
 {
-	printf("Vector3 %s(x:%lf, y:%lf, z:%lf)\n", name, v.x, v.y, v.z);
-}
+	HEIGHT,
+	WIDTH,
+};
 
-int	ft_vec3_near_zero(const t_vector3 v)
+enum e_checks
 {
-	double	s;
+	SWITCH,
+	MODIF_ATTRI,
+};
 
-	s = 1e-8;
-	return ((fabs(v.x) < s) && (fabs(v.y) < s) && (fabs(v.z) < s));
-}
+#endif

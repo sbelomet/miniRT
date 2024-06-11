@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   matrices.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 11:33:44 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/07 14:32:02 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,18 +34,6 @@ t_matrix	ft_mtrx_new(void)
 	}
 	return (m);
 }
-/* 
-t_matrix	ft_mtrx_new2(const t_vector4 x, const t_vector4 y,
-	const t_vector4 z, const t_vector4 w)
-{
-	t_matrix	m;
-
-	m.c1 = x;
-	m.c2 = y;
-	m.c3 = z;
-	m.c4 = w;
-	return (m);
-} */
 
 void	ft_mtrx_print(const t_matrix m, const char *name)
 {

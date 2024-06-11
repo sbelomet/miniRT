@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   gtfm_rotation.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 15:33:56 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/05 15:46:15 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/07 12:40:45 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,28 +48,6 @@ t_matrix	rotation_z(double rad)
 	return (table);
 }
 
-/* static void	calculate_rotation_angles(t_vector3 vec, double *x, double *y)
-{
-	double	ratio;
-
-	ratio = sqrt((vec.x * vec.x) + (vec.z * vec.z));
-	if (0.0 == ratio)
-		*y = M_PI_2;
-	else
-		*y = acos(vec.z / ratio);
-	*x = acos(ratio);
-	printf("ratio: %lf\n", ratio);
-	printf("x: %lf\n", *x);
-} */
-/* 	//calculate_rotation_angles(normal, &x_angle, &z_angle);
-	calculate_rotation_angles(normal, &x_angle, &y_angle);
-	//rotate_z = rotation_z(z_angle);
-	rotate_y = rotation_y(y_angle);
-	//ft_mtrx_print(rotate_y, "rotated y");
-	rotate_x = rotation_x(x_angle);
-	//ft_mtrx_print(rotate_x, "rotated x");
-	//full_rotation = ft_mtrx_mult_mtrx(rotate_z, rotate_x);
-	full_rotation = ft_mtrx_mult_mtrx(rotate_y, rotate_x); */
 t_matrix	rotation_matrix(t_vector3 normal)
 {
 	t_matrix	full_rotation;

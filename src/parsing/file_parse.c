@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   file_parse.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:20:25 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/30 14:45:14 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/10 11:19:10 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static bool	add_token(t_base *base, int type, char **args)
 	new_object->type = type;
 	new_object->object = create_object(base, args, type);
 	if (new_object->object == NULL)
-		return (free(new_object), false);
+		return (free(new_object), print_error("Error\n", CREATE_ERR, 0));
 	if (type == SPHERE)
 		new_object->ft_hit = ft_sphere_hit;
 	else if (type == PLANE)

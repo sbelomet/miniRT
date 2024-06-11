@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   light_funcs.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 15:15:10 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/06/05 15:17:43 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/10 10:57:27 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
 
-/* Maybe change for mats */
 int	ft_compute_shadow(t_objects *list, t_objects *current,
 	t_ray light_ray, double light_dist)
 {

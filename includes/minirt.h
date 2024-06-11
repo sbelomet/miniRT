@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   minirt.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/06 11:29:20 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/10 10:53:45 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINIRT_H
 # define MINIRT_H
 
+/* libraries */
 # include <fcntl.h>
 # include <stdio.h>
 # include <unistd.h>
@@ -22,331 +23,16 @@
 # include <math.h>
 # include <limits.h>
 
-/* Libraries External */
-//# include <mlx.h>
+/* External libraries */
 # include "../mlx/mlx.h"
 # include "../libft/includes/libft.h"
 
-/* Defines */
-# define WIN_WIDTH 1280
-# define WIN_HEIGHT 720
-# define SAMPLE_PPIXEL 40
-# define EPSILON 0.0001
-# define PIX_SAMPLE_SCALE 0.025
-# define MAX_DEPTH 10
+/* header files */
+# include "enums.h"
+# include "macros.h"
+# include "structures.h"
 
-/* Keyboard mapping macros */
-# define A_KEY 0
-# define S_KEY 1
-# define D_KEY 2
-# define Z_KEY 6
-# define X_KEY 7
-# define W_KEY 13
-# define TAB_KEY 48
-# define ESC_KEY 53
-# define PLUS_KEY 69
-# define MINUS_KEY 78
-# define RENDER_KEY 76
-# define DESELECT_KEY 36
-# define LIGHT_SELECT 19
-# define CAMERA_SELECT 18
-# define CONTROL_LEFT 256
-# define CONTROL_RIGHT 269
-
-/* Mouse mapping macros */
-# define ROLL_UP 4
-# define ROLL_DOWN 5
-# define CLICK_LEFT 1
-
-/* Normal/inverse matrix */
-# define FWDFORM 1
-# define BCKFORM 0
-
-# define TITLE "BetterBlender"
-# define MALLOC_ERR "Malloc error"
-# define EXT_ERR "Invalid extension file"
-# define BAD_ARGS "Bad number of arguments"
-# define MLX_ERR "MLX initialisation failure"
-# define IMG_ERR "Image initialisation failure"
-# define CAM_ERR "Camera initialisation failure"
-# define MAT_ERR "Material initialisation failure"
-# define FILE_ERR "Cannot open file with path: "
-# define WIN_ERR "Window initialisation failure"
-
-# define ISS_ERR "whitespace that is not a space detected"
-# define OBJNAME_ERR "Invalid object name while parsing file"
-# define REGEX_ERR "File contains some not allowed characters"
-# define ARGS_ERR "Bad number of arguments while parsing an object"
-# define RANGE_ERR "Some number while parsing file is out of range"
-# define CREATE_ERR "An error occurred when trying to create an object"
-# define TWICE_ERR "Twice single object detected, only one A, C, L object"
-
-/* Enum */
-
-enum e_types
-{
-	ALIGHT,
-	CAMERA,
-	LIGHT,
-	SPHERE,
-	PLANE,
-	CYLINDER,
-	CONE,
-};
-
-enum e_type_add
-{
-	HEIGHT,
-	WIDTH,
-};
-
-/* Basic units structures */
-
-typedef struct s_vector3
-{
-	double	x;
-	double	y;
-	double	z;
-}			t_vector3;
-
-typedef struct s_vector4
-{
-	double	x;
-	double	y;
-	double	z;
-	double	w;
-}			t_vector4;
-
-typedef struct s_matrix
-{
-	double	m[4][4];
-}			t_matrix;
-
-typedef struct s_gtform
-{
-	t_matrix	fwdtfm;
-	t_matrix	bcktfm;
-	t_matrix	scaling;
-	t_matrix	rotation;
-	t_matrix	translation;
-}				t_gtform;
-
-typedef struct s_color
-{
-	double	alpha;
-	double	red;
-	double	green;
-	double	blue;
-}			t_color;
-
-typedef struct s_ray
-{
-	t_vector3	p1;
-	t_vector3	p2;
-	t_vector3	lab;
-}				t_ray;
-
-typedef struct s_inter
-{
-	double	min;
-	double	max;
-}			t_inter;
-
-typedef struct s_hit_rec
-{
-	struct s_objects	*object;
-	t_vector3			p;
-	t_vector3			normal;
-	struct s_material	*mat;
-	double				t;
-	int					front_face;
-	t_color				emmited;
-	t_color				color;
-	double				intensity;
-	struct s_base		*base;
-	t_vector3			eyev;
-}						t_hit_rec;
-
-typedef struct s_aabb
-{
-	t_inter	x;
-	t_inter	y;
-	t_inter	z;
-}			t_aabb;
-
-/* Objects structures */
-
-typedef struct s_alight
-{
-	double	ratio;
-	t_color	color;
-	t_color	intensity;
-}				t_alight;
-
-typedef struct s_camera
-{
-	double		horz_size;
-	double		aspect;
-	double		length;
-	t_vector3	lookfrom;
-	t_vector3	lookat;
-	t_vector3	vup;
-	t_vector3	alignment;
-	t_vector3	proj_screen_u;
-	t_vector3	proj_screen_v;
-	t_vector3	proj_screen_center;
-}				t_camera;
-
-typedef struct s_light
-{
-	int				id;
-	t_vector3		coord;
-	double			ratio;
-	t_color			color;
-	t_color			intensity;
-	struct s_light	*next;
-}					t_light;
-
-typedef struct s_sphere
-{
-	t_vector3			center;
-	double				diam;
-	double				radius;
-	t_color				color;
-	struct s_material	*mat;
-	t_gtform			tm;
-}						t_sphere;
-
-typedef struct s_plane
-{
-	t_vector3			coord;
-	t_vector3			norm;
-	t_color				color;
-	struct s_material	*mat;
-	t_gtform			tm;
-}						t_plane;
-
-typedef struct s_cylin
-{
-	t_vector3			coord;
-	t_vector3			ori;
-	double				diam;
-	double				radius;
-	double				height;
-	t_color				color;
-	struct s_material	*mat;
-	t_gtform			tm;
-}						t_cylin;
-
-typedef struct s_cone
-{
-	t_vector3			coord;
-	t_vector3			ori;
-	double				diam;
-	double				radius;
-	double				height;
-	t_color				color;
-	struct s_material	*mat;
-	t_gtform			tm;
-}						t_cone;
-
-/* Other structures */
-
-typedef struct s_hittable
-{
-	void				*object;
-	struct s_hittable	*next;
-}						t_hittable;
-
-typedef struct s_objects
-{
-	int					id;
-	int					type;
-	void				*object;
-	int					(*ft_hit)(const void *, const t_ray, t_hit_rec *);
-	struct s_objects	*next;
-}					t_objects;
-
-typedef struct s_material
-{
-	double	reflect;
-	double	shine;
-	double	spec;
-	void	(*ft_comp_color)(t_objects *, t_hit_rec *,
-			t_light *, t_color *);
-}			t_material;
-
-typedef struct s_exposure
-{
-	t_vector3	lightv;
-	t_vector3	reflectv;
-	double		light_dot_normal;
-	double		reflect_dot_eye;
-	double		factor;
-}	t_exposure;
-
-typedef struct s_selected
-{
-	int		id;
-	int		type;
-	bool	modified;
-	bool	in_translation;
-	int		cylin_cone_modes; // HEIGHT OR WIDTH, ONLY FOR CYLINDER
-}				t_selected;
-
-typedef struct s_image
-{
-	int		endian;
-	void	*img_ptr;
-	char	*img_data;
-	int		size_line;
-	int		bitsperpix;
-}				t_image;
-
-/* Base */
-
-typedef struct s_base
-{
-	t_image			image;
-	t_alloc			*alloc;
-	void			*mlx_ptr;
-	void			*win_ptr;
-	t_camera		*camera;
-	t_alight		*alight;
-	int				exit_code;
-	unsigned long	seed;
-	t_selected		select;
-	t_objects		*first_object;
-	t_light			*first_light;
-	int				num_of_lights;
-}					t_base;
-
-/* Alternative structures */
-
-typedef struct s_equation
-{
-	double		a;
-	double		b;
-	double		c;
-	double		t;
-	double		t1;
-	double		t2;
-	double		t3;
-	double		t4;
-	double		min_t;
-	t_vector3	oc;
-}				t_equation;
-
-typedef struct s_poi
-{
-	t_vector3	poi[4];
-	int			tv[4];
-	int			index;
-}				t_poi;
-
-/* ------------------------------------- */
-
-/* FUNCTIONS */
+/* Funtions prototypes */
 
 /***   UTILS   ***/
 
@@ -404,11 +90,6 @@ bool		default_uniques(t_base *base);
 
 /* ---------------- */
 
-/***   HOOKS  ***/
-void		ft_hooks(t_base *base);
-
-/* ---------------- */
-
 /* Color */
 t_color		ft_color_new(const double a, const double r,
 				const double g, const double b);
@@ -452,8 +133,6 @@ void		ft_object_add(t_objects **hittable, t_objects *new);
 /* Vector3 Utils */
 t_vector3	ft_vec3_new(const double x, const double y, const double z);
 void		ft_vec3_print(const t_vector3 v, const char *name);
-t_vector3	ft_set_face_normal(const t_ray r, const t_vector3 outward_normal,
-				t_hit_rec *rec);
 int			ft_vec3_near_zero(const t_vector3 v);
 t_vector3	ft_vec3_add(t_vector3 v1, const t_vector3 v2);
 t_vector3	ft_vec3_sub(t_vector3 v1, const t_vector3 v2);
@@ -465,12 +144,6 @@ t_vector3	ft_vec3_cross(const t_vector3 v1, const t_vector3 v2);
 double		ft_vec3_len(const t_vector3 v);
 double		ft_vec3_len_squared(const t_vector3 v);
 t_vector3	ft_vec3_unit(t_vector3 v);
-t_vector3	ft_vec3_rand(t_base *base);
-t_vector3	ft_vec3_rand_range(t_base *base, const double min,
-				const double max);
-t_vector3	ft_vec3_rand_unit_sphere(t_base *base);
-t_vector3	ft_vec3_rand_unit(t_base *base);
-t_vector3	ft_vec3_rand_hemis(t_base *base, const t_vector3 normal);
 int			ft_vec3_grtr(const t_vector3 v1, const t_vector3 v2);
 int			ft_vec3_lssr(const t_vector3 v1, const t_vector3 v2);
 int			ft_vec3_equal(const t_vector3 v1, const t_vector3 v2);
@@ -484,28 +157,25 @@ t_vector4	ft_vec4_mult_mtrx(const t_vector4 v, const t_matrix m);
 
 /* Matrix Utils */
 t_matrix	ft_mtrx_new(void);
-t_matrix	ft_mtrx_new2(const t_vector4 x, const t_vector4 y,
-				const t_vector4 z, const t_vector4 w);
 void		ft_mtrx_print(const t_matrix m, const char *name);
 t_matrix	ft_mtrx_mult_mtrx(const t_matrix m1, const t_matrix m2);
-double		ft_mtrx_det(t_matrix *m, int size);
 t_matrix	ft_mtrx_inverse(const t_matrix m);
 
 /* Geometric Transforms Utils */
 t_gtform	ft_gtf_new(void);
-
 t_matrix	rotation_z(double rad);
 t_matrix	rotation_x(double rad);
 t_matrix	rotation_y(double rad);
+t_matrix	mtrx_transpose(t_matrix	t);
 t_matrix	mtrx_scaling(t_vector3 scale);
 t_matrix	mtrx_translate(t_vector3 coord);
 t_matrix	rotation_matrix(t_vector3 normal);
-t_gtform	ft_gtf_new2(const t_matrix fwd, const t_matrix bck);
 t_gtform	ft_gtf_mult(const t_gtform g1, const t_gtform g2);
-void	ft_gtf_set_transform(t_gtform *gt, const t_matrix trans,
-	const t_matrix rot_mtrx, const t_matrix scale);
-t_ray		ft_gtf_apply_ray(const t_gtform gt,
-				const t_ray r, const int dir_flag);
+t_gtform	ft_gtf_new2(const t_matrix fwd, const t_matrix bck);
+void		ft_gtf_set_transform(t_gtform *gt, const t_matrix trans,
+				const t_matrix rot_mtrx, const t_matrix scale);
+t_ray		ft_gtf_apply_ray(const t_gtform gt, const t_ray r,
+				const int dir_flag);
 t_vector3	ft_gtf_apply_vec3(const t_gtform gt, const t_vector3 v,
 				const int dir_flag);
 
@@ -533,7 +203,6 @@ void		ft_comp_diffuse_color(t_objects *list, t_hit_rec *rec,
 t_vector3	ft_reflect(const t_vector3 v, const t_vector3 n);
 t_vector3	ft_refract(const t_vector3 uv,
 				const t_vector3 n, double etai_over_etat);
-t_color		ft_emmited(double u, double v, const t_vector3 p);
 
 /* Scatter Functions */
 int			ft_lamb_scatter(const t_ray r_in, const t_hit_rec rec,
@@ -559,7 +228,55 @@ t_color		ft_add_specular(t_light *light, t_hit_rec rec, t_exposure exp);
 t_light		*ft_light_new(t_vector3 coord, t_color	color, double intensity);
 int			ft_calc_lights(t_objects *list, t_hit_rec *rec, t_light *lights);
 
-/* Hooks */
-void		reset_select(t_base *base);
+/* ---- Hooks ---- */
+
+/* Translate hook */
+t_matrix	to_translate(double x, double y, double z);
+bool		translate_cone(t_cone *cone, double x, double y);
+bool		translate_light(t_base *base, double x, double y);
+bool		translate_camera(t_base *base, double x, double y);
+bool		translate_plane(t_plane *plane, double x, double y);
+bool		translate_sphere(t_sphere *sphere, double x, double y);
+bool		translate_cylinder(t_cylin *cylinder, double x, double y);
+void		ft_translate(t_base *base, t_objects *objs, double x, double y);
+
+/* Translate z hook */
+bool		trans_z_cone(t_cone *cone, int keycode);
+bool		trans_z_light(t_base *base, int keycode);
+bool		trans_z_camera(t_base *base, int keycode);
+bool		trans_z_plane(t_plane *plane, int keycode);
+bool		trans_z_sphere(t_sphere *sphere, int keycode);
+bool		trans_z_cylinder(t_cylin *cylinder, int keycode);
+void		ft_handle_distance(t_base *base, t_objects *objs, int buttoncode);
+
+/* Modify attributes */
+void		modify_value(t_base *base, int type);
+bool		add_to_sphere(t_sphere *sphere, int type);
+bool		add_to_cone(t_cone *cone, int type, int mode);
+bool		add_to_cylinder(t_cylin *cylinder, int type, int mode);
+
+/* Rotation hook */
+bool		ft_rotable_keys(int keycode);
+t_matrix	ft_new_rotation_matrix(int keycode);
+bool		ft_rotation_cone(t_cone *cone, int keycode);
+bool		ft_rotation_camera(t_base *base, int keycode);
+bool		ft_rotation_plane(t_plane *plane, int keycode);
+bool		ft_rotation_cylinder(t_cylin *cylinder, int keycode);
+void		ft_rotate(t_base *base, t_objects *objs, int keycode);
+
+/* Mouse hook */
+void		ft_setup_selected(t_base *base);
+bool		select_object(t_base *base, int x, int y);
+void		ft_handle_select(t_base *base, int x, int y);
+int			button_hook(int buttoncode, int x, int y, t_base *base);
+
+/* Handle hook */
+void		ft_hooks(t_base *base);
+void		ft_new_render(t_base *base);
+void		ft_handle_light(t_base *base);
+void		ft_handle_camera(t_base *base);
+void		reset_select(t_base *base, int flag);
+bool		ft_check_types(t_base *base, int type);
+void		switching_cylin_cone_mode(t_base *base);
 
 #endif

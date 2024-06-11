@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   defaults.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 11:49:22 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/29 11:57:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/10 10:58:42 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,21 +42,6 @@ static t_alight	*default_amblight(void)
 	return (amblight);
 }
 
-/* static t_light	*default_light(void)
-{
-	t_light		*light;
-
-	light = (t_light *) malloc (sizeof(t_light));
-	if (!light)
-		return (print_error_null("Error\n", MALLOC_ERR));
-	light->coord = ft_vec3_new(0, -10, -2);
-	light->ratio = 0.5;
-	light->color = ft_color_new(0, 125.0, 125.0, 125.0);
-	light->color = ft_color_byte_to_per(light->color);
-	light->next = NULL;
-	return (light);
-} */
-
 bool	default_uniques(t_base *base)
 {
 	if (base->camera == NULL)
@@ -73,9 +58,3 @@ bool	default_uniques(t_base *base)
 	}
 	return (true);
 }
-/* 	if (base->first_light == NULL)
-	{
-		base->first_light = default_light();
-		if (base->first_light == NULL)
-			return (false);
-	} */

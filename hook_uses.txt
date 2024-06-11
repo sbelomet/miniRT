@@ -1,0 +1,14 @@
+How to use hooks for this MiniRT project
+
+Click_left: Select an object (in translation mode, move an object).
+
+Keys a,s,d,w,z,x: for rotation object.
+Key tabulator: switch height and width (only cylinder and cone).
+Key escape: Exit the program.
+Keys plus/minus (+/-): (only right keys of the keyboard) modify diameter, height or width.
+Keys arrow_up/arrow_down: modify distance of selected object (in translation mode).
+Key enter: Start re-render. (right key of the keyboard).
+Key return: Deselect an selected object.
+Key 1: Select the camera.
+Key 2: Select light, repeated pulsations switch between lights.
+Key control_left/control_right: Enter/Exit translation mode. 

@@ -3,28 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   light_list_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 20:01:50 by scherty           #+#    #+#             */
-/*   Updated: 2024/06/05 15:19:54 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/14 10:56:50 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-t_light	*ft_light_new(t_vector3 coord, t_color	color, double intensity)
-{
-	t_light	*new;
-
-	new = (t_light *)malloc(sizeof(t_light));
-	if (!new)
-		return (NULL);
-	new->coord = coord;
-	new->color = color;
-	new->ratio = intensity;
-	new->next = NULL;
-	return (new);
-}
 
 t_light	*ft_light_last(t_light *light)
 {

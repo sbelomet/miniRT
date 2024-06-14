@@ -6,7 +6,7 @@
 /*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/10 10:40:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/10 11:07:30 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/06/14 11:04:13 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,12 +56,12 @@
 # define MLX_ERR "MLX initialisation failure"
 # define IMG_ERR "Image initialisation failure"
 # define CAM_ERR "Camera initialisation failure"
-# define FILE_ERR "Cannot open file with path: "
 # define WIN_ERR "Window initialisation failure"
 # define MAT_ERR "Material initialisation failure"
-# define ISS_ERR "whitespace that is not a space detected"
+# define ISS_ERR "Whitespace that is not a space detected"
 # define OBJNAME_ERR "Invalid object name while parsing file"
-# define REGEX_ERR "File contains some not allowed characters"
+# define REGEX_ERR "File contains forbidden characters"
+# define CHECK_ERR "Malloc error or an argument is not complete"
 # define ARGS_ERR "Bad number of arguments while parsing an object"
 # define RANGE_ERR "A number, while parsing the file is out of range"
 # define CREATE_ERR "An error occurred when trying to create an object"

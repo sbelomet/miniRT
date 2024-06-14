@@ -6,7 +6,7 @@
 /*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/19 15:20:25 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/10 11:19:10 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/06/14 11:08:13 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,14 +29,14 @@ static bool	add_token(t_base *base, int type, char **args)
 {
 	t_objects	*new_object;
 
-	new_object = (t_objects *)malloc(sizeof(t_objects));
+	new_object = (t_objects *)ft_malloc(sizeof(t_objects), &base->alloc);
 	if (!new_object)
 		return (false);
 	new_object->next = NULL;
 	new_object->type = type;
 	new_object->object = create_object(base, args, type);
 	if (new_object->object == NULL)
-		return (free(new_object), print_error("Error\n", CREATE_ERR, 0));
+		return (print_error("Error\n", CREATE_ERR, 0));
 	if (type == SPHERE)
 		new_object->ft_hit = ft_sphere_hit;
 	else if (type == PLANE)
@@ -53,14 +53,14 @@ static int	check_create_unique(t_base *base, char **args, int type)
 {
 	if (type == ALIGHT && base->alight == NULL)
 	{
-		base->alight = create_amblight(args);
+		base->alight = create_amblight(base, args);
 		if (base->alight == NULL)
 			return (print_error("Error\n", CREATE_ERR, 1));
 		return (0);
 	}
 	if (type == CAMERA && base->camera == NULL)
 	{
-		base->camera = create_camera(args);
+		base->camera = create_camera(base, args);
 		if (!base->camera)
 			return (print_error("Error\n", CREATE_ERR, 1));
 		return (0);
@@ -108,7 +108,7 @@ int	file_parse(t_base *base, char *filepath)
 
 	infile = open(filepath, O_RDONLY);
 	if (infile < 0)
-		return (perror(filepath), set_exit_code(base, 1, 1));
+		return (perror(filepath), set_exit_code(base, 127, 1));
 	line = get_next_line(infile);
 	while (line != NULL)
 	{

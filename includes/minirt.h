@@ -6,7 +6,7 @@
 /*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/14 10:07:34 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/06/10 10:53:45 by lgosselk         ###   ########.fr       */
+/*   Updated: 2024/06/14 10:56:45 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ t_vector3	parse_vector(char *arg);
 bool		out_range_color(t_color color);
 bool		out_range_norm(t_vector3 vector);
 bool		out_range(double min, double max, double value);
+bool		the_fucking_args_works(t_base *base, char **args, const int type);
 
 /* Parsing utils 2 */
 bool		line_regex(char *line);
@@ -80,10 +81,10 @@ t_cylin		*create_cylinder(t_base *base, char **args);
 t_cone		*create_cone(t_base *base, char **args);
 
 /* Creating uniques */
-t_light		*create_light(char **args);
-t_camera	*create_camera(char **args);
-t_alight	*create_amblight(char **args);
 bool		add_light(t_base *base, char **args);
+t_light		*create_light(t_base *base, char **args);
+t_camera	*create_camera(t_base *base, char **args);
+t_alight	*create_amblight(t_base *base, char **args);
 
 /* Defaults */
 bool		default_uniques(t_base *base);
@@ -225,7 +226,6 @@ t_vector3	reflect(t_vector3 in, t_vector3 normal);
 void		ft_light_add(t_light **light, t_light *new);
 bool		ft_dark_spec(t_exposure *exp, t_hit_rec rec, t_light *light);
 t_color		ft_add_specular(t_light *light, t_hit_rec rec, t_exposure exp);
-t_light		*ft_light_new(t_vector3 coord, t_color	color, double intensity);
 int			ft_calc_lights(t_objects *list, t_hit_rec *rec, t_light *lights);
 
 /* ---- Hooks ---- */

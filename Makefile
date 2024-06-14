@@ -6,7 +6,7 @@
 #    By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/03/14 10:06:00 by lgosselk          #+#    #+#              #
-#    Updated: 2024/06/07 14:08:21 by lgosselk         ###   ########.fr        #
+#    Updated: 2024/06/11 14:00:49 by lgosselk         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -48,7 +48,7 @@ MTRX_UTILS_DIR	=	matrices_utils/
 
 # Files
 F_ERRORS		=	errors
-F_UTILS			=	cleaning parsing_utils parsing_utils2
+F_UTILS			=	cleaning parsing_utils parsing_utils2 parsing_utils3
 F_INIT			=	base_init camera_utils
 F_PARSING		=	file_parse creating_objs creating_uniques defaults
 F_COLOR			=	color color_ops1

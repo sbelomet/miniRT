@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils2.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/26 10:34:31 by lgosselk          #+#    #+#             */
-/*   Updated: 2024/05/28 13:00:59 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/14 11:21:11 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ bool	line_regex(char *line)
 			return (true);
 		if (((*line == '-') || (*line == '+'))
 			&& (*(line + 1) == '-' || *(line + 1) == '+'))
+			return (false);
+		if (ft_isalnum(*line) && (*(line + 1) == '-' || *(line + 1) == '+'))
 			return (false);
 		if (!ft_isalnum(*line) && !(*line == '.') && !(*line == ' ')
 			&& !(*line == ',') && !(*line == '-') && !(*line == '+'))

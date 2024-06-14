@@ -3,31 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   camera_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sbelomet <sbelomet@42lausanne.ch>          +#+  +:+       +#+        */
+/*   By: lgosselk <lgosselk@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/09 10:06:19 by sbelomet          #+#    #+#             */
-/*   Updated: 2024/06/06 11:54:04 by sbelomet         ###   ########.fr       */
+/*   Updated: 2024/06/14 10:55:03 by lgosselk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minirt.h"
-
-t_camera	*ft_cam_new(void)
-{
-	t_camera	*cam;
-
-	cam = (t_camera *)malloc(sizeof(t_camera));
-	if (!cam)
-		return (NULL);
-	cam->lookfrom = ft_vec3_new(0, -10, -1);
-	cam->lookat = ft_vec3_new(0, 0, 0);
-	cam->vup = ft_vec3_new(0, 0, 1);
-	cam->length = 2;
-	cam->horz_size = .25;
-	cam->aspect = 16.0 / 9.0;
-	ft_update_cam(cam);
-	return (cam);
-}
 
 void	ft_update_cam(t_camera *cam)
 {
